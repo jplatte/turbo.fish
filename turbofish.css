@@ -1,0 +1,110 @@
+@font-face {
+    font-family: 'Droid Sans Mono';
+    src: url('DroidSansMono.woff') format('woff');
+}
+
+/* Basic layout */
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Droid Sans Mono';
+    background-color: #333;
+    overflow: hidden;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    padding: .5em;
+    background-color: #111;
+}
+
+footer a {
+    color: #fff;
+}
+
+/* Magic */
+t, u, r, b, o, f, i, s, h {
+    display: flex;
+    font-size: 9vh;
+    padding: 1vh;
+    line-height: 1;
+    color: #fff;
+    text-decoration: none;
+
+    position: relative;
+
+    animation-name: turbofish;
+    animation-fill-mode: backwards;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+t { animation-duration: 2.75s; animation-delay: 1.25s }
+u { animation-duration: 3.25s; animation-delay: 0.25s }
+r { animation-duration: 3s; animation-delay: 1s }
+b { animation-duration: 5s; animation-delay: 0s }
+o { animation-duration: 2.25s; animation-delay: 0.75s }
+f { animation-duration: 1.75s; animation-delay: 0.5s }
+i { animation-duration: 2.5s; animation-delay: 1s }
+s { animation-duration: 2s; animation-delay: 0s }
+h { animation-duration: 3.75s; animation-delay: 0.25s }
+
+@keyframes turbofish {
+    from { left: -20vh }
+    to { left: calc(100vw + 20vh) }
+}
+
+x {
+    display: flex;
+}
+
+x::before,
+x::after {
+    display: block;
+
+    animation-name: x;
+    animation-duration: .2s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+x::before {
+    content: '∶';
+}
+
+x::after {
+    content: '∶';
+    animation-delay: 0.05s;
+    animation-direction: reverse;
+}
+
+@keyframes x {
+    0% { transform: rotateX(0deg) }
+    50% { transform: rotateX(90deg) }
+    100% { transform: rotateX(0deg) }
+}
+
+t::after,
+u::after,
+r::after,
+b::after,
+o::after,
+f::after,
+i::after,
+s::after,
+h::after {
+    content: '<>';
+}
