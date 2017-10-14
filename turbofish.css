@@ -46,7 +46,7 @@ t, u, r, b, o, f, i, s, h {
 
     position: relative;
 
-    animation-name: turbofish;
+    animation-name: fish;
     animation-fill-mode: backwards;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
@@ -62,39 +62,23 @@ i { animation-duration: 2.5s; animation-delay: 1s }
 s { animation-duration: 2s; animation-delay: 0s }
 h { animation-duration: 3.75s; animation-delay: 0.25s }
 
-@keyframes turbofish {
-    from { left: -20vh }
-    to { left: calc(100vw + 20vh) }
-}
-
-x {
-    display: flex;
-}
-
-x::before,
-x::after {
+t::before, t::after,
+u::before, u::after,
+r::before, r::after,
+b::before, b::after,
+o::before, o::after,
+f::before, f::after,
+i::before, i::after,
+s::before, s::after,
+h::before, h::after {
+    content: '∶';
+    order: -1;
     display: block;
 
-    animation-name: x;
+    animation-name: turbo;
     animation-duration: .2s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-}
-
-x::before {
-    content: '∶';
-}
-
-x::after {
-    content: '∶';
-    animation-delay: 0.05s;
-    animation-direction: reverse;
-}
-
-@keyframes x {
-    0% { transform: rotateX(0deg) }
-    50% { transform: rotateX(90deg) }
-    100% { transform: rotateX(0deg) }
 }
 
 t::after,
@@ -106,5 +90,17 @@ f::after,
 i::after,
 s::after,
 h::after {
-    content: '<>';
+    animation-delay: 0.05s;
+    animation-direction: reverse;
+}
+
+@keyframes turbo {
+    0% { transform: rotateX(0deg) }
+    50% { transform: rotateX(90deg) }
+    100% { transform: rotateX(0deg) }
+}
+
+@keyframes fish {
+    from { left: -20vh }
+    to { left: calc(100vw + 20vh) }
 }
