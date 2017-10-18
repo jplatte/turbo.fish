@@ -1,0 +1,12 @@
+[package]
+authors = ["Jonas Platte <jplatte+git@posteo.de>"]
+name = "turbo_fish"
+version = "0.1.0"
+
+[dependencies]
+rocket = "0.3.3"
+rocket_codegen = "0.3.3"
+
+[dependencies.rocket_contrib]
+version = "0.3.3"
+features = ["tera_templates"]

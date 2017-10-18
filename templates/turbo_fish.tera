@@ -1,0 +1,22 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+
+<title>::&lt;{{ guts | escape }}&gt;</title>
+
+<link rel="stylesheet" href="normalize.css">
+<link rel="stylesheet" href="turbo_fish.css">
+
+<t>&lt;{{ guts | escape }}&gt;</t>
+<u>&lt;{{ guts | escape }}&gt;</u>
+<r>&lt;{{ guts | escape }}&gt;</r>
+<b>&lt;{{ guts | escape }}&gt;</b>
+<o>&lt;{{ guts | escape }}&gt;</o>
+<f>&lt;{{ guts | escape }}&gt;</f>
+<i>&lt;{{ guts | escape }}&gt;</i>
+<s>&lt;{{ guts | escape }}&gt;</s>
+<h>&lt;{{ guts | escape }}&gt;</h>

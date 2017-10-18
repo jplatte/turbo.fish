@@ -20,6 +20,10 @@ body {
     font-family: 'Droid Sans Mono', sans-serif;
     background-color: #333;
     overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 footer {
@@ -100,7 +104,10 @@ h::after {
     100% { transform: rotateX(0deg) }
 }
 
+/* TODO: Find a better solution for this. Possibly something with multiple fish
+ *       per line and :first-of-type for line breaks?
+ */
 @keyframes fish {
-    from { left: -20vh }
-    to { left: calc(100vw + 20vh) }
+    from { right: 100vw }
+    to { right: -100vw }
 }
