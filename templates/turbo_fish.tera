@@ -6,17 +6,17 @@
 
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
 
-<title>::&lt;{{ guts | escape }}&gt;</title>
+<title>::<​{{ guts }}></title>
 
 <link rel="stylesheet" href="normalize.css">
 <link rel="stylesheet" href="turbo_fish.css">
 
-<t>&lt;{{ guts | escape }}&gt;</t>
-<u>&lt;{{ guts | escape }}&gt;</u>
-<r>&lt;{{ guts | escape }}&gt;</r>
-<b>&lt;{{ guts | escape }}&gt;</b>
-<o>&lt;{{ guts | escape }}&gt;</o>
-<f>&lt;{{ guts | escape }}&gt;</f>
-<i>&lt;{{ guts | escape }}&gt;</i>
-<s>&lt;{{ guts | escape }}&gt;</s>
-<h>&lt;{{ guts | escape }}&gt;</h>
+<t><​{{ guts }}></t>
+<u><​{{ guts }}></u>
+<r><​{{ guts }}></r>
+<b><​{{ guts }}></b>
+<o><​{{ guts }}></o>
+<f><​{{ guts }}></f>
+<i><​{{ guts }}></i>
+<s><​{{ guts }}></s>
+<h><​{{ guts }}></h>
