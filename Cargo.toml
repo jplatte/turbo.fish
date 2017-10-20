@@ -1,6 +1,6 @@
 [package]
 authors = ["Jonas Platte <jplatte+git@posteo.de>"]
-name = "turbo_fish"
+name = "turbofish"
 version = "0.1.0"
 
 [dependencies]
