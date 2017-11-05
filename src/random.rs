@@ -18,7 +18,7 @@ static TYPES: &[&str] = &[
     "&str",
     "String",
     "Vec<_>",
-    "HashMap<_>",
+    "HashMap<_, _>",
 ];
 
 pub fn random_type() -> &'static str {
