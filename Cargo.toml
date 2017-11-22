@@ -1,6 +1,8 @@
 [package]
 authors = ["Jonas Platte <jplatte+git@posteo.de>"]
+license = "AGPL-3.0+"
 name = "turbofish"
+repository = "https://github.com/jplatte/turbo.fish"
 version = "0.1.0"
 
 [dependencies]
