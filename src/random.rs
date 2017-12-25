@@ -18,6 +18,7 @@ static TYPES: &[&str] = &[
     "&str",
     "String",
     "Vec<_>",
+    "HashSet<_>",
     "HashMap<_, _>",
 ];
 
