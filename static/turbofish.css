@@ -55,6 +55,7 @@ t, u, r, b, o, f, i, s, h {
     line-height: 1;
     color: #fff;
     text-decoration: none;
+    white-space: nowrap;
 
     position: relative;
 
