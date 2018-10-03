@@ -4,12 +4,13 @@ license = "AGPL-3.0+"
 name = "turbofish"
 repository = "https://github.com/jplatte/turbo.fish"
 version = "0.1.0"
+edition = "2018"
 
 [dependencies]
-rand = "0.3.17"
-rocket = "0.3.3"
-rocket_codegen = "0.3.3"
+rand = "0.5.5"
+rocket = "0.3.17"
+rocket_codegen = "0.3.17"
 
 [dependencies.rocket_contrib]
-version = "0.3.3"
+version = "0.3.17"
 features = ["tera_templates"]

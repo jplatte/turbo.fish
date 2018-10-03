@@ -1,22 +1,21 @@
-#![feature(non_ascii_idents, plugin)]
+#![feature(plugin)]
 #![plugin(rocket_codegen)]
 
-extern crate rand;
-extern crate rocket;
-extern crate rocket_contrib;
-
-mod turbofish;
 mod random;
+mod turbofish;
 
-use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::{
+    collections::HashMap,
+    path::{Path, PathBuf},
+};
 
-use rocket::http::uri::URI;
-use rocket::response::{NamedFile, Redirect};
+use rocket::{
+    http::uri::URI,
+    response::{NamedFile, Redirect},
+};
 use rocket_contrib::Template;
 
-use random::random_type;
-use turbofish::TurboFish;
+use self::{random::random_type, turbofish::TurboFish};
 
 #[get("/")]
 fn index() -> Template {

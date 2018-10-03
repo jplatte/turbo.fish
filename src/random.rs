@@ -36,22 +36,20 @@ fn random_type_depth(depth: u8) -> String {
     let (type_name, generics) = rand::thread_rng().choose(TYPES).unwrap();
     if *generics == 0 {
         type_name.to_string()
+    } else if depth == RECURSION_LIMIT {
+        format!(
+            "{}<{}>",
+            type_name,
+            (0..*generics).map(|_| "_").collect::<Vec<_>>().join(", ")
+        )
     } else {
-        if depth == RECURSION_LIMIT {
-            format!(
-                "{}<{}>",
-                type_name,
-                (0..*generics).map(|_| "_").collect::<Vec<_>>().join(", ")
-            )
-        } else {
-            format!(
-                "{}<{}>",
-                type_name,
-                (0..*generics)
-                    .map(|_| random_type_depth(depth + 1))
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            )
-        }
+        format!(
+            "{}<{}>",
+            type_name,
+            (0..*generics)
+                .map(|_| random_type_depth(depth + 1))
+                .collect::<Vec<_>>()
+                .join(", ")
+        )
     }
 }

@@ -1,5 +1,4 @@
-use rocket::request::FromParam;
-use rocket::http::RawStr;
+use rocket::{http::RawStr, request::FromParam};
 
 pub struct TurboFish(String);
 
