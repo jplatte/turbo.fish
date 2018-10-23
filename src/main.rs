@@ -27,7 +27,12 @@ fn index() -> Template {
 
 #[get("/random")]
 fn random() -> Redirect {
-    Redirect::to(&URI::percent_encode(&format!("::<{}>", random_type())))
+    // Safari doesn't seem to like redirect URLs starting with ::
+    // the leading / is here to fix that.
+    Redirect::to(&format!(
+        "/{}",
+        URI::percent_encode(&format!("::<{}>", random_type()))
+    ))
 }
 
 #[get("/<turbofish>")]
