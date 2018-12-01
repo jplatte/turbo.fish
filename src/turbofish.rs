@@ -1,8 +1,21 @@
-use rocket::{http::RawStr, request::FromParam};
+use std::fmt;
+
+use rocket::{
+    http::{
+        impl_from_uri_param_identity,
+        uri::{Formatter, Path, UriDisplay},
+        RawStr,
+    },
+    request::FromParam,
+};
 
 pub struct TurboFish(String);
 
 impl TurboFish {
+    pub fn new(guts: String) -> TurboFish {
+        TurboFish(guts)
+    }
+
     pub fn gut(self) -> String {
         self.0
     }
@@ -23,3 +36,11 @@ impl<'a> FromParam<'a> for TurboFish {
         }
     }
 }
+
+impl UriDisplay<Path> for TurboFish {
+    fn fmt(&self, f: &mut Formatter<Path>) -> fmt::Result {
+        f.write_value(&format!("::<{}>", self.0))
+    }
+}
+
+impl_from_uri_param_identity!([Path] TurboFish);

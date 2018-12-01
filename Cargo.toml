@@ -7,10 +7,9 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-rand = "0.5.5"
-rocket = "0.3.17"
-rocket_codegen = "0.3.17"
+rand = "0.7.0"
+rocket = "0.4.2"
 
 [dependencies.rocket_contrib]
-version = "0.3.17"
+version = "0.4.2"
 features = ["tera_templates"]

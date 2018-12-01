@@ -1,4 +1,4 @@
-use rand::{self, Rng};
+use rand::seq::SliceRandom;
 
 const RECURSION_LIMIT: u8 = 1;
 
@@ -33,7 +33,7 @@ pub fn random_type() -> String {
 }
 
 fn random_type_depth(depth: u8) -> String {
-    let (type_name, generics) = rand::thread_rng().choose(TYPES).unwrap();
+    let (type_name, generics) = TYPES.choose(&mut rand::thread_rng()).unwrap();
     if *generics == 0 {
         type_name.to_string()
     } else if depth == RECURSION_LIMIT {

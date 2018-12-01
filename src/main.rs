@@ -1,5 +1,4 @@
-#![feature(plugin)]
-#![plugin(rocket_codegen)]
+#![feature(proc_macro_hygiene, decl_macro)]
 
 mod random;
 mod turbofish;
@@ -10,10 +9,11 @@ use std::{
 };
 
 use rocket::{
-    http::uri::URI,
+    get,
     response::{NamedFile, Redirect},
+    routes, uri,
 };
-use rocket_contrib::Template;
+use rocket_contrib::templates::Template;
 
 use self::{random::random_type, turbofish::TurboFish};
 
@@ -27,12 +27,7 @@ fn index() -> Template {
 
 #[get("/random")]
 fn random() -> Redirect {
-    // Safari doesn't seem to like redirect URLs starting with ::
-    // the leading / is here to fix that.
-    Redirect::to(&format!(
-        "/{}",
-        URI::percent_encode(&format!("::<{}>", random_type()))
-    ))
+    Redirect::to(uri!(turbofish: TurboFish::new(random_type())))
 }
 
 #[get("/<turbofish>")]
