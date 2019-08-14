@@ -1,4 +1,5 @@
 <!doctype html>
+<html lang="en">
 
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -22,8 +23,10 @@
 <h><​{{ guts }}></h>
 
 <footer>
-    <a href="https://www.reddit.com/r/rust/comments/3fimgp/why_double_colon_rather_that_dot/ctozkd0/#ctozkd0">what?</a>
+    <a href="https://www.reddit.com/r/rust/comments/3fimgp/why_double_colon_rather_that_dot/ctozkd0/">what?</a>
     <a href="https://matematikaadit.github.io/posts/rust-turbofish.html">what??</a>
     <a href="https://github.com/jplatte/turbo.fish">code.</a>
     <a href="/random">random!</a>
 </footer>
+
+</html>
