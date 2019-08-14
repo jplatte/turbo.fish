@@ -120,3 +120,27 @@ h::after {
     from { right: 100vw }
     to { right: -100vw }
 }
+
+.reverse t,
+.reverse u,
+.reverse r,
+.reverse b,
+.reverse o,
+.reverse f,
+.reverse i,
+.reverse s,
+.reverse h {
+    animation-direction: reverse;
+}
+
+.reverse t::before, .reverse t::after,
+.reverse u::before, .reverse u::after,
+.reverse r::before, .reverse r::after,
+.reverse b::before, .reverse b::after,
+.reverse o::before, .reverse o::after,
+.reverse f::before, .reverse f::after,
+.reverse i::before, .reverse i::after,
+.reverse s::before, .reverse s::after,
+.reverse h::before, .reverse h::after {
+    order: 1;
+}
