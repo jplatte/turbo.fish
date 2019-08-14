@@ -2,30 +2,71 @@ use rand::seq::SliceRandom;
 
 const RECURSION_LIMIT: u8 = 1;
 
-static TYPES: &[(&str, usize)] = &[
-    ("_", 0),
-    ("bool", 0),
-    ("char", 0),
-    ("i8", 0),
-    ("i16", 0),
-    ("i32", 0),
-    ("i64", 0),
-    ("isize", 0),
-    ("u8", 0),
-    ("u16", 0),
-    ("u32", 0),
-    ("u64", 0),
-    ("usize", 0),
-    ("f32", 0),
-    ("f64", 0),
-    ("&str", 0),
-    ("String", 0),
-    ("()", 0),
-    ("Vec", 1),
-    ("HashSet", 1),
-    ("HashMap", 2),
-    ("Box", 1),
-    ("Result", 2),
+trait Type: Send + Sync {
+    fn num_generic_params(&self) -> usize;
+    fn stringify(&self, generic_params: &[String]) -> String;
+}
+
+impl Type for &'static str {
+    fn num_generic_params(&self) -> usize {
+        0
+    }
+
+    fn stringify(&self, _generic_params: &[String]) -> String {
+        (*self).to_owned()
+    }
+}
+
+impl Type for (&'static str, &'static str) {
+    fn num_generic_params(&self) -> usize {
+        1
+    }
+
+    fn stringify(&self, generic_params: &[String]) -> String {
+        format!("{}{}{}", self.0, generic_params[0], self.1)
+    }
+}
+
+impl Type for (&'static str, &'static str, &'static str) {
+    fn num_generic_params(&self) -> usize {
+        2
+    }
+
+    fn stringify(&self, generic_params: &[String]) -> String {
+        format!(
+            "{}{}{}{}{}",
+            self.0, generic_params[0], self.1, generic_params[1], self.2
+        )
+    }
+}
+
+static TYPES: &[&dyn Type] = &[
+    &"_",
+    &"bool",
+    &"char",
+    &"i8",
+    &"i16",
+    &"i32",
+    &"i64",
+    &"isize",
+    &"u8",
+    &"u16",
+    &"u32",
+    &"u64",
+    &"usize",
+    &"f32",
+    &"f64",
+    &"&str",
+    &"String",
+    &"()",
+    &("&", ""),
+    &("&mut ", ""),
+    &("[", "]"),
+    &("Box<", ">"),
+    &("Vec<", ">"),
+    &("HashSet<", ">"),
+    &("Result<", ", ", ">"),
+    &("HashMap<", ", ", ">"),
 ];
 
 pub fn random_type() -> String {
@@ -33,23 +74,19 @@ pub fn random_type() -> String {
 }
 
 fn random_type_depth(depth: u8) -> String {
-    let (type_name, generics) = TYPES.choose(&mut rand::thread_rng()).unwrap();
-    if *generics == 0 {
-        type_name.to_string()
-    } else if depth == RECURSION_LIMIT {
-        format!(
-            "{}<{}>",
-            type_name,
-            (0..*generics).map(|_| "_").collect::<Vec<_>>().join(", ")
+    let ty = TYPES.choose(&mut rand::thread_rng()).unwrap();
+
+    if depth == RECURSION_LIMIT {
+        ty.stringify(
+            &(0..ty.num_generic_params())
+                .map(|_| "_".to_owned())
+                .collect::<Vec<_>>(),
         )
     } else {
-        format!(
-            "{}<{}>",
-            type_name,
-            (0..*generics)
+        ty.stringify(
+            &(0..ty.num_generic_params())
                 .map(|_| random_type_depth(depth + 1))
-                .collect::<Vec<_>>()
-                .join(", ")
+                .collect::<Vec<_>>(),
         )
     }
 }
