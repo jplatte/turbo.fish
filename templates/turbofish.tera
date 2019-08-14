@@ -27,6 +27,7 @@
     <a href="https://matematikaadit.github.io/posts/rust-turbofish.html">what??</a>
     <a href="https://github.com/jplatte/turbo.fish">code.</a>
     <a href="/random">random!</a>
+    <a href="/<{{ guts }}>::">reverse!</a>
 </footer>
 
 </html>
