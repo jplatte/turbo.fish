@@ -31,6 +31,11 @@ fn random() -> Redirect {
     Redirect::to(uri!(turbofish: TurboFish::new(random_type())))
 }
 
+#[get("/random_reverse")]
+fn random_reverse() -> Redirect {
+    Redirect::to(uri!(reverse_turbofish: ReverseTurboFish::new(random_type())))
+}
+
 #[get("/<turbofish>", rank = 1)]
 fn turbofish(turbofish: TurboFish) -> Template {
     let mut context = HashMap::new();
@@ -58,7 +63,14 @@ fn main() {
     rocket::ignite()
         .mount(
             "/",
-            routes![index, random, turbofish, reverse_turbofish, files],
+            routes![
+                index,
+                random,
+                random_reverse,
+                turbofish,
+                reverse_turbofish,
+                files
+            ],
         )
         .attach(Template::fairing())
         .launch();

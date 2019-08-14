@@ -25,7 +25,7 @@
 <footer>
     <a href="https://www.reddit.com/r/rust/comments/cpknjb/i_just_found_out_that_method_is_valid/ewq261j/">what?</a>
     <a href="https://github.com/jplatte/turbo.fish">code.</a>
-    <a href="/random">random!</a>
+    <a href="/random_reverse">random!</a>
     <a href="/::<{{ guts }}>">reverse!</a>
 </footer>
 
