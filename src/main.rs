@@ -9,6 +9,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use rocket::{
     get,
     response::{NamedFile, Redirect},
@@ -18,12 +19,20 @@ use rocket_contrib::templates::Template;
 
 use self::{random::random_type, reverse_turbofish::ReverseTurboFish, turbofish::TurboFish};
 
+fn tpl_context(guts: &str) -> HashMap<&'static str, String> {
+    let mut context = HashMap::new();
+    context.insert("guts", guts.replace("<", "<​"));
+    context.insert(
+        "guts_link",
+        utf8_percent_encode(guts, NON_ALPHANUMERIC).to_string(),
+    );
+
+    context
+}
+
 #[get("/")]
 fn index() -> Template {
-    let mut context = HashMap::new();
-    context.insert("guts", "");
-
-    Template::render("turbofish", context)
+    Template::render("turbofish", tpl_context(""))
 }
 
 #[get("/random")]
@@ -33,23 +42,19 @@ fn random() -> Redirect {
 
 #[get("/random_reverse")]
 fn random_reverse() -> Redirect {
-    Redirect::to(uri!(reverse_turbofish: ReverseTurboFish::new(random_type())))
+    Redirect::to(uri!(
+        reverse_turbofish: ReverseTurboFish::new(random_type())
+    ))
 }
 
 #[get("/<turbofish>", rank = 1)]
 fn turbofish(turbofish: TurboFish) -> Template {
-    let mut context = HashMap::new();
-    context.insert("guts", turbofish.gut());
-
-    Template::render("turbofish", context)
+    Template::render("turbofish", tpl_context(&turbofish.gut()))
 }
 
 #[get("/<reverse_turbofish>", rank = 2)]
 fn reverse_turbofish(reverse_turbofish: ReverseTurboFish) -> Template {
-    let mut context = HashMap::new();
-    context.insert("guts", reverse_turbofish.gut());
-
-    Template::render("reverse_turbofish", context)
+    Template::render("reverse_turbofish", tpl_context(&reverse_turbofish.gut()))
 }
 
 // From https://github.com/SergioBenitez/Rocket/blob/master/examples/static_files/src/main.rs

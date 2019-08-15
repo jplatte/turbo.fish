@@ -30,7 +30,7 @@ impl<'a> FromParam<'a> for ReverseTurboFish {
         let (mid, back) = rest.split_at(rest.len() - 3);
 
         if front == "<" && back == ">::" {
-            Ok(ReverseTurboFish(mid.replace("<", "<​")))
+            Ok(ReverseTurboFish(mid.to_owned()))
         } else {
             Err(param)
         }
