@@ -122,25 +122,25 @@ h::after {
 }
 
 .reverse t,
-.reverse u,
+.reverse u, .index u,
 .reverse r,
-.reverse b,
+.reverse b, .index b,
 .reverse o,
 .reverse f,
-.reverse i,
-.reverse s,
+.reverse i, .index i,
+.reverse s, .index s,
 .reverse h {
     animation-direction: reverse;
 }
 
 .reverse t::before, .reverse t::after,
-.reverse u::before, .reverse u::after,
+.reverse u::before, .reverse u::after, .index u::before, .index u::after,
 .reverse r::before, .reverse r::after,
-.reverse b::before, .reverse b::after,
+.reverse b::before, .reverse b::after, .index b::before, .index b::after,
 .reverse o::before, .reverse o::after,
 .reverse f::before, .reverse f::after,
-.reverse i::before, .reverse i::after,
-.reverse s::before, .reverse s::after,
+.reverse i::before, .reverse i::after, .index i::before, .index i::after,
+.reverse s::before, .reverse s::after, .index s::before, .index s::after,
 .reverse h::before, .reverse h::after {
     order: 1;
 }

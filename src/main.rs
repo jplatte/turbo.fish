@@ -32,7 +32,7 @@ fn tpl_context(guts: &str) -> HashMap<&'static str, String> {
 
 #[get("/")]
 fn index() -> Template {
-    Template::render("turbofish", tpl_context(""))
+    Template::render("index", HashMap::<String, String>::new())
 }
 
 #[get("/random")]
