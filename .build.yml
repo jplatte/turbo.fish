@@ -1,6 +1,4 @@
 image: archlinux
-sources:
-  - https://github.com/jplatte/turbo.fish
 packages:
   - rustup
 tasks:
