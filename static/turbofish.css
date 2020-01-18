@@ -19,6 +19,7 @@ html, body {
 body {
     font-family: 'Droid Sans Mono', sans-serif;
     background-color: #111;
+    color: #fff;
     overflow: hidden;
 
     display: flex;
@@ -35,6 +36,7 @@ footer {
     background-color: #222;
     border: solid #444;
     border-width: 1px 0 0 1px;
+    font-size: 1rem;
 }
 
 footer a {
@@ -53,7 +55,6 @@ t, u, r, b, o, f, i, s, h {
     font-size: 9vh;
     padding: 1vh;
     line-height: 1;
-    color: #fff;
     text-decoration: none;
     white-space: nowrap;
 
@@ -83,7 +84,9 @@ o::before, o::after,
 f::before, f::after,
 i::before, i::after,
 s::before, s::after,
-h::before, h::after {
+h::before, h::after,
+body.not-found::before,
+body.not-found::after {
     content: '∶';
     order: -1;
     display: block;
@@ -102,7 +105,8 @@ o::after,
 f::after,
 i::after,
 s::after,
-h::after {
+h::after,
+body.not-found::after {
     animation-delay: 0.05s;
     animation-direction: reverse;
 }
@@ -143,4 +147,27 @@ h::after {
 .reverse s::before, .reverse s::after, .index s::before, .index s::after,
 .reverse h::before, .reverse h::after {
     order: 1;
+}
+
+body.not-found {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 400%;
+}
+
+/* not-found turbofish */
+turbofish {
+    /* ferris-orange */
+    color: #f74c00;
+}
+
+turbofish::before {
+    content: '<';
+    color: #fff;
+}
+
+turbofish::after {
+    content: '>';
+    color: #fff;
 }

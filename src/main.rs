@@ -11,8 +11,8 @@ use std::{
 
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use rocket::{
-    get,
-    response::{NamedFile, Redirect},
+    catch, catchers, get,
+    response::{status::NotFound, NamedFile, Redirect},
     routes, uri,
 };
 use rocket_contrib::templates::Template;
@@ -58,13 +58,17 @@ fn reverse_turbofish(reverse_turbofish: ReverseTurboFish) -> Template {
 }
 
 // From https://github.com/SergioBenitez/Rocket/blob/master/examples/static_files/src/main.rs
-#[get("/<file..>", rank = 100)]
+#[get("/<file..>", rank = 10)]
 fn files(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("static/").join(file)).ok()
 }
 
+#[catch(404)]
+fn page_not_found() -> NotFound<Template> {
+    NotFound(Template::render("404", HashMap::<String, String>::new()))
+}
+
 fn main() {
-    // TODO: Custom 404
     rocket::ignite()
         .mount(
             "/",
@@ -74,9 +78,10 @@ fn main() {
                 random_reverse,
                 turbofish,
                 reverse_turbofish,
-                files
+                files,
             ],
         )
+        .register(catchers![page_not_found])
         .attach(Template::fairing())
         .launch();
 }
