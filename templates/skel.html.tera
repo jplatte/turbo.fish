@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; frame-src 'none'">
+
+<title>{% block title %}{% endblock title %}</title>
+
+<link rel="stylesheet" href="normalize.css">
+<link rel="stylesheet" href="turbofish.css">
+
+<body {% block body_attrs %}{% endblock body_attrs %}>
+
+{% block content %}{% endblock content %}
+
+
+</body>
+
+</html>

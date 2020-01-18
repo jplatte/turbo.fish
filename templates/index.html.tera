@@ -1,0 +1,20 @@
+{% extends "skel" %}
+{% block title %}::<>{% endblock title %}
+{% block content %}
+<t><></t>
+<u><></u>
+<r><></r>
+<b><></b>
+<o><></o>
+<f><></f>
+<i><></i>
+<s><></s>
+<h><></h>
+
+<footer>
+    <a href="https://www.reddit.com/r/rust/comments/3fimgp/why_double_colon_rather_that_dot/ctozkd0/">what?</a>
+    <a href="https://matematikaadit.github.io/posts/rust-turbofish.html">what??</a>
+    <a href="https://github.com/jplatte/turbo.fish">code.</a>
+    <a href="/random">random!</a>
+</footer>
+{% endblock content %}

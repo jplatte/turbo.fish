@@ -1,17 +1,7 @@
-<!doctype html>
-<html lang="en" class="reverse">
-
-<meta charset="utf-8">
-<meta http-equiv="x-ua-compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; frame-src 'none'">
-
-<title><​{{ guts }}>::</title>
-
-<link rel="stylesheet" href="normalize.css">
-<link rel="stylesheet" href="turbofish.css">
-
+{% extends "skel" %}
+{% block title %}<​{{ guts }}>::{% endblock title %}
+{% block body_attrs %}class="reverse"{% endblock %}
+{% block content %}
 <t><​{{ guts }}></t>
 <u><​{{ guts }}></u>
 <r><​{{ guts }}></r>
@@ -28,5 +18,4 @@
     <a href="/random_reverse">random!</a>
     <a href="/::<{{ guts_link }}>">reverse!</a>
 </footer>
-
-</html>
+{% endblock content %}
