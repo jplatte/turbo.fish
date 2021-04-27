@@ -25,16 +25,15 @@ impl<'a> FromParam<'a> for ReverseTurboFish {
     type Error = &'a RawStr;
 
     fn from_param(param: &'a RawStr) -> Result<Self, Self::Error> {
-        let param_cow = param.percent_decode().map_err(|_| param)?;
-        let (front, rest) = param_cow.split_at(1);
-        let (mid, back) = rest.split_at(rest.len() - 3);
-
-        if front == "<" && back == ">::" {
-            Ok(ReverseTurboFish(mid.to_owned()))
-        } else {
-            Err(param)
-        }
+        parse(param).ok_or(param)
     }
+}
+
+fn parse(param: &RawStr) -> Option<ReverseTurboFish> {
+    let param = param.percent_decode().ok()?;
+    let rest = param.strip_prefix("<")?;
+    let mid = rest.strip_suffix(">::")?;
+    Some(ReverseTurboFish::new(mid.to_owned()))
 }
 
 impl UriDisplay<Path> for ReverseTurboFish {

@@ -25,16 +25,15 @@ impl<'a> FromParam<'a> for TurboFish {
     type Error = &'a RawStr;
 
     fn from_param(param: &'a RawStr) -> Result<Self, Self::Error> {
-        let param_cow = param.percent_decode().map_err(|_| param)?;
-        let (back, rest) = param_cow.split_at(3);
-        let (mid, front) = rest.split_at(rest.len() - 1);
-
-        if back == "::<" && front == ">" {
-            Ok(TurboFish(mid.to_owned()))
-        } else {
-            Err(param)
-        }
+        parse(param).ok_or(param)
     }
+}
+
+fn parse(param: &RawStr) -> Option<TurboFish> {
+    let param = param.percent_decode().ok()?;
+    let rest = param.strip_prefix("::<")?;
+    let mid = rest.strip_suffix(">")?;
+    Some(TurboFish::new(mid.to_owned()))
 }
 
 impl UriDisplay<Path> for TurboFish {
