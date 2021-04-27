@@ -8,9 +8,9 @@ edition = "2018"
 
 [dependencies]
 percent-encoding = "2.1.0"
-rand = "0.7.0"
-rocket = "0.4.2"
+rand = "0.8.3"
+rocket = "0.4.7"
 
 [dependencies.rocket_contrib]
-version = "0.4.2"
+version = "0.4.7"
 features = ["tera_templates"]
