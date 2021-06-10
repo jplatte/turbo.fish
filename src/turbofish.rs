@@ -3,8 +3,7 @@ use std::fmt;
 use rocket::{
     http::{
         impl_from_uri_param_identity,
-        uri::{Formatter, Path, UriDisplay},
-        RawStr,
+        uri::fmt::{Formatter, Path, UriDisplay},
     },
     request::FromParam,
 };
@@ -22,22 +21,21 @@ impl TurboFish {
 }
 
 impl<'a> FromParam<'a> for TurboFish {
-    type Error = &'a RawStr;
+    type Error = &'a str;
 
-    fn from_param(param: &'a RawStr) -> Result<Self, Self::Error> {
+    fn from_param(param: &'a str) -> Result<Self, Self::Error> {
         parse(param).ok_or(param)
     }
 }
 
-fn parse(param: &RawStr) -> Option<TurboFish> {
-    let param = param.percent_decode().ok()?;
+fn parse(param: &str) -> Option<TurboFish> {
     let rest = param.strip_prefix("::<")?;
     let mid = rest.strip_suffix(">")?;
     Some(TurboFish::new(mid.to_owned()))
 }
 
 impl UriDisplay<Path> for TurboFish {
-    fn fmt(&self, f: &mut Formatter<Path>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_, Path>) -> fmt::Result {
         f.write_value(&format!("::<{}>", self.0))
     }
 }
