@@ -1,5 +1,4 @@
 mod random;
-mod reverse_turbofish;
 mod routes;
 mod turbofish;
 
@@ -16,7 +15,6 @@ async fn main() -> Result<(), rocket::Error> {
                 routes::random,
                 routes::random_reverse,
                 routes::turbofish,
-                routes::reverse_turbofish,
                 routes::files,
             ],
         )

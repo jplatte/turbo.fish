@@ -14,7 +14,7 @@ use rocket::{
 use rocket_dyn_templates::Template;
 use serde_json::json;
 
-use crate::{random::random_type, reverse_turbofish::ReverseTurboFish, turbofish::TurboFish};
+use crate::{random::random_type, turbofish::TurboFish};
 
 fn tpl_context(guts: &str, reverse: bool) -> serde_json::Value {
     json!({
@@ -36,17 +36,12 @@ pub fn random() -> Redirect {
 
 #[get("/random_reverse")]
 pub fn random_reverse() -> Redirect {
-    Redirect::to(uri!(reverse_turbofish(ReverseTurboFish::new(random_type()))))
+    Redirect::to(uri!(turbofish(TurboFish::reverse(random_type()))))
 }
 
 #[get("/<turbofish>", rank = 1)]
 pub fn turbofish(turbofish: TurboFish) -> Template {
     Template::render("turbofish", tpl_context(&turbofish.gut(), true))
-}
-
-#[get("/<reverse_turbofish>", rank = 2)]
-pub fn reverse_turbofish(reverse_turbofish: ReverseTurboFish) -> Template {
-    Template::render("turbofish", tpl_context(&reverse_turbofish.gut(), false))
 }
 
 // From https://github.com/SergioBenitez/Rocket/blob/master/examples/static_files/src/main.rs

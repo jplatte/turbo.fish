@@ -8,15 +8,22 @@ use rocket::{
     request::FromParam,
 };
 
-pub struct TurboFish(String);
+pub struct TurboFish {
+    guts: String,
+    reverse: bool,
+}
 
 impl TurboFish {
     pub fn new(guts: String) -> TurboFish {
-        TurboFish(guts)
+        TurboFish { guts, reverse: false }
+    }
+
+    pub fn reverse(guts: String) -> TurboFish {
+        TurboFish { guts, reverse: true }
     }
 
     pub fn gut(self) -> String {
-        self.0
+        self.guts
     }
 }
 
@@ -29,14 +36,25 @@ impl<'a> FromParam<'a> for TurboFish {
 }
 
 fn parse(param: &str) -> Option<TurboFish> {
-    let rest = param.strip_prefix("::<")?;
-    let mid = rest.strip_suffix(">")?;
-    Some(TurboFish::new(mid.to_owned()))
+    match &param.as_bytes()[..3] {
+        b"::<" => {
+            let mid = param[3..].strip_suffix(">")?;
+            Some(TurboFish::new(mid.to_owned()))
+        }
+        [b'<', ..] => {
+            let mid = param[1..].strip_suffix(">::")?;
+            Some(TurboFish::reverse(mid.to_owned()))
+        }
+        _ => None,
+    }
 }
 
 impl UriDisplay<Path> for TurboFish {
     fn fmt(&self, f: &mut Formatter<'_, Path>) -> fmt::Result {
-        f.write_value(&format!("::<{}>", self.0))
+        match self {
+            Self { guts, reverse: false } => f.write_value(&format!("::<{}>", guts)),
+            Self { guts, reverse: true } => f.write_value(&format!("<{}>::", guts)),
+        }
     }
 }
 
