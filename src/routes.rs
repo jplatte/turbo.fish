@@ -12,18 +12,16 @@ use rocket::{
     uri,
 };
 use rocket_dyn_templates::Template;
+use serde_json::json;
 
 use crate::{random::random_type, reverse_turbofish::ReverseTurboFish, turbofish::TurboFish};
 
-fn tpl_context(guts: &str) -> HashMap<&'static str, String> {
-    let mut context = HashMap::new();
-    context.insert("guts", guts.replace("<", "<​"));
-    context.insert(
-        "guts_link",
-        utf8_percent_encode(guts, NON_ALPHANUMERIC).to_string(),
-    );
-
-    context
+fn tpl_context(guts: &str, reverse: bool) -> serde_json::Value {
+    json!({
+        "guts": guts.replace("<", "<​"),
+        "guts_link": utf8_percent_encode(guts, NON_ALPHANUMERIC).to_string(),
+        "reverse": reverse,
+    })
 }
 
 #[get("/")]
@@ -45,12 +43,12 @@ pub fn random_reverse() -> Redirect {
 
 #[get("/<turbofish>", rank = 1)]
 pub fn turbofish(turbofish: TurboFish) -> Template {
-    Template::render("turbofish", tpl_context(&turbofish.gut()))
+    Template::render("turbofish", tpl_context(&turbofish.gut(), true))
 }
 
 #[get("/<reverse_turbofish>", rank = 2)]
 pub fn reverse_turbofish(reverse_turbofish: ReverseTurboFish) -> Template {
-    Template::render("reverse_turbofish", tpl_context(&reverse_turbofish.gut()))
+    Template::render("turbofish", tpl_context(&reverse_turbofish.gut(), false))
 }
 
 // From https://github.com/SergioBenitez/Rocket/blob/master/examples/static_files/src/main.rs
