@@ -36,9 +36,7 @@ pub fn random() -> Redirect {
 
 #[get("/random_reverse")]
 pub fn random_reverse() -> Redirect {
-    Redirect::to(uri!(reverse_turbofish(
-        ReverseTurboFish::new(random_type())
-    )))
+    Redirect::to(uri!(reverse_turbofish(ReverseTurboFish::new(random_type()))))
 }
 
 #[get("/<turbofish>", rank = 1)]

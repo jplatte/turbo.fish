@@ -1,0 +1,3 @@
+imports_granularity = "Crate"
+newline_style = "Unix"
+use_small_heuristics = "Max"

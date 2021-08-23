@@ -33,10 +33,7 @@ impl Type for (&'static str, &'static str, &'static str) {
     }
 
     fn stringify(&self, generic_params: &[String]) -> String {
-        format!(
-            "{}{}{}{}{}",
-            self.0, generic_params[0], self.1, generic_params[1], self.2
-        )
+        format!("{}{}{}{}{}", self.0, generic_params[0], self.1, generic_params[1], self.2)
     }
 }
 
@@ -77,16 +74,10 @@ fn random_type_depth(depth: u8) -> String {
     let ty = TYPES.choose(&mut rand::thread_rng()).unwrap();
 
     if depth == RECURSION_LIMIT {
-        ty.stringify(
-            &(0..ty.num_generic_params())
-                .map(|_| "_".to_owned())
-                .collect::<Vec<_>>(),
-        )
+        ty.stringify(&(0..ty.num_generic_params()).map(|_| "_".to_owned()).collect::<Vec<_>>())
     } else {
         ty.stringify(
-            &(0..ty.num_generic_params())
-                .map(|_| random_type_depth(depth + 1))
-                .collect::<Vec<_>>(),
+            &(0..ty.num_generic_params()).map(|_| random_type_depth(depth + 1)).collect::<Vec<_>>(),
         )
     }
 }
