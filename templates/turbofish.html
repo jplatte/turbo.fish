@@ -12,11 +12,21 @@
 <s><​{{ guts }}></s>
 <h><​{{ guts }}></h>
 
+{% let random_link -%}
+{% let reverse_link -%}
+{% if reverse -%}
+    {% let random_link = "/random_reverse" -%}
+    {% let reverse_link = "/::<{}>"|format(guts_link) -%}
+{% else -%}
+    {% let random_link = "/random" -%}
+    {% let reverse_link = "/<{}>::"|format(guts_link) -%}
+{% endif -%}
+
 <footer>
     <a href="https://www.reddit.com/r/rust/comments/3fimgp/why_double_colon_rather_that_dot/ctozkd0/">what?</a>
     <a href="https://matematikaadit.github.io/posts/rust-turbofish.html">what??</a>
     <a href="https://github.com/jplatte/turbo.fish">code.</a>
-    <a href="/random">random!</a>
-    <a href="/<{{ guts_link }}>::">reverse!</a>
+    <a href="{{ random_link }}">random!</a>
+    <a href="{{ reverse_link }}">reverse!</a>
 </footer>
 {% endblock content %}
