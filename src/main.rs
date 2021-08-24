@@ -16,16 +16,19 @@ mod turbofish;
 #[tokio::main]
 async fn main() -> Result<(), axum::BoxError> {
     let app = Router::new()
-        .route("/", get(routes::index))
+        .route("/:turbofish", get(routes::turbofish))
         .route("/random", get(routes::random))
         .route("/random_reverse", get(routes::random_reverse))
-        .route("/:turbofish", get(routes::turbofish))
-        .or(service::get(ServeDir::new("static")).handle_error(|error: std::io::Error| {
-            Ok::<_, Infallible>((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                format!("Unhandled internal error: {}", error),
-            ))
-        }))
+        .route("/", get(routes::index))
+        .nest(
+            "/static",
+            service::get(ServeDir::new("static")).handle_error(|error: std::io::Error| {
+                Ok::<_, Infallible>((
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Unhandled internal error: {}", error),
+                ))
+            }),
+        )
         .or(routes::page_not_found.into_service());
 
     axum::Server::bind(&SocketAddr::from(([127, 0, 0, 1], 8001)))
