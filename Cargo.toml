@@ -7,11 +7,10 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
+askama = "0.10.5"
+axum = { version = "0.2.1", default-features = false }
 percent-encoding = "2.1.0"
 rand = "0.8.3"
-rocket = "0.5.0-rc.1"
-serde_json = "1.0.66"
-
-[dependencies.rocket_dyn_templates]
-version = "0.1.0-rc.1"
-features = ["tera"]
+serde = "1.0.129"
+tokio = { version = "1.10.0", features = ["macros", "rt-multi-thread"] }
+tower-http = { version = "0.1.1", features = ["fs"] }

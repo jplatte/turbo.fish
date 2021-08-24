@@ -1,56 +1,55 @@
-use std::{
-    collections::HashMap,
-    path::{Path, PathBuf},
+use askama::Template;
+use axum::{
+    extract::Path,
+    http::StatusCode,
+    response::{IntoResponse, Redirect},
 };
-
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
-use rocket::{
-    catch,
-    fs::NamedFile,
-    get,
-    response::{status::NotFound, Redirect},
-    uri,
-};
-use rocket_dyn_templates::Template;
-use serde_json::json;
 
-use crate::{random::random_type, turbofish::TurboFish};
+use crate::{turbofish::TurboFish, HtmlTemplate};
 
-fn tpl_context(guts: &str, reverse: bool) -> serde_json::Value {
-    json!({
-        "guts": guts.replace("<", "<​"),
-        "guts_link": utf8_percent_encode(guts, NON_ALPHANUMERIC).to_string(),
-        "reverse": reverse,
-    })
+#[derive(Template)]
+#[template(path = "index.html")]
+struct IndexTpl;
+
+pub async fn index() -> impl IntoResponse {
+    HtmlTemplate(IndexTpl)
 }
 
-#[get("/")]
-pub fn index() -> Template {
-    Template::render("index", HashMap::<String, String>::new())
+pub async fn random() -> impl IntoResponse {
+    Redirect::to(format!("/{}", TurboFish::random()).parse().unwrap())
 }
 
-#[get("/random")]
-pub fn random() -> Redirect {
-    Redirect::to(uri!(turbofish(TurboFish::new(random_type()))))
+pub async fn random_reverse() -> impl IntoResponse {
+    Redirect::to(format!("/{}", TurboFish::random_reverse()).parse().unwrap())
 }
 
-#[get("/random_reverse")]
-pub fn random_reverse() -> Redirect {
-    Redirect::to(uri!(turbofish(TurboFish::reverse(random_type()))))
+#[derive(Template)]
+#[template(path = "turbofish.html")]
+struct TurboFishTpl {
+    guts: String,
+    guts_link: String,
+    reverse: bool,
 }
 
-#[get("/<turbofish>", rank = 1)]
-pub fn turbofish(turbofish: TurboFish) -> Template {
-    Template::render("turbofish", tpl_context(&turbofish.gut(), true))
+impl TurboFishTpl {
+    fn new(turbofish: TurboFish) -> Self {
+        Self {
+            guts: turbofish.guts.replace("<", "<​"),
+            guts_link: utf8_percent_encode(&turbofish.guts, NON_ALPHANUMERIC).to_string(),
+            reverse: turbofish.reverse,
+        }
+    }
 }
 
-// From https://github.com/SergioBenitez/Rocket/blob/master/examples/static_files/src/main.rs
-#[get("/<file..>", rank = 10)]
-pub async fn files(file: PathBuf) -> Option<NamedFile> {
-    NamedFile::open(Path::new("static/").join(file)).await.ok()
+pub async fn turbofish(Path(turbofish): Path<TurboFish>) -> impl IntoResponse {
+    HtmlTemplate(TurboFishTpl::new(turbofish))
 }
 
-#[catch(404)]
-pub fn page_not_found() -> NotFound<Template> {
-    NotFound(Template::render("404", HashMap::<String, String>::new()))
+#[derive(Template)]
+#[template(path = "404.html")]
+struct NotFoundTpl;
+
+pub async fn page_not_found() -> impl IntoResponse {
+    (StatusCode::NOT_FOUND, HtmlTemplate(NotFoundTpl))
 }
