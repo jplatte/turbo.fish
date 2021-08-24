@@ -17,11 +17,11 @@ pub async fn index() -> impl IntoResponse {
 }
 
 pub async fn random() -> impl IntoResponse {
-    Redirect::to(format!("/{}", TurboFish::random()).parse().unwrap())
+    Redirect::to(format!("/{}", TurboFish::random().to_uri_segment()).parse().unwrap())
 }
 
 pub async fn random_reverse() -> impl IntoResponse {
-    Redirect::to(format!("/{}", TurboFish::random_reverse()).parse().unwrap())
+    Redirect::to(format!("/{}", TurboFish::random_reverse().to_uri_segment()).parse().unwrap())
 }
 
 #[derive(Template)]
