@@ -7,11 +7,15 @@ use axum::{
     response::{Html, IntoResponse},
     service, Router,
 };
+use percent_encoding::{AsciiSet, CONTROLS};
 use tower_http::services::ServeDir;
 
 mod random;
 mod routes;
 mod turbofish;
+
+/// https://url.spec.whatwg.org/#fragment-percent-encode-set
+const FRAGMENT: &AsciiSet = &CONTROLS.add(b' ').add(b'"').add(b'<').add(b'>').add(b'`');
 
 #[tokio::main]
 async fn main() -> Result<(), axum::BoxError> {

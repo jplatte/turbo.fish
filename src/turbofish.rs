@@ -1,9 +1,9 @@
 use std::fmt;
 
-use percent_encoding::{percent_decode_str, utf8_percent_encode, NON_ALPHANUMERIC};
+use percent_encoding::{percent_decode_str, utf8_percent_encode};
 use serde::de::{self, Deserialize, Deserializer};
 
-use crate::random::random_type;
+use crate::{random::random_type, FRAGMENT};
 
 pub struct TurboFish {
     pub guts: String,
@@ -28,7 +28,7 @@ impl TurboFish {
     }
 
     pub fn to_uri_segment(&self) -> String {
-        utf8_percent_encode(&self.to_string(), NON_ALPHANUMERIC).to_string()
+        utf8_percent_encode(&self.to_string(), FRAGMENT).to_string()
     }
 }
 

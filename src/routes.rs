@@ -4,9 +4,9 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Redirect},
 };
-use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
+use percent_encoding::utf8_percent_encode;
 
-use crate::{turbofish::TurboFish, HtmlTemplate};
+use crate::{turbofish::TurboFish, HtmlTemplate, FRAGMENT};
 
 #[derive(Template)]
 #[template(path = "index.html")]
@@ -36,7 +36,7 @@ impl TurboFishTpl {
     fn new(turbofish: TurboFish) -> Self {
         Self {
             guts: turbofish.guts.replace("<", "<​"),
-            guts_link: utf8_percent_encode(&turbofish.guts, NON_ALPHANUMERIC).to_string(),
+            guts_link: utf8_percent_encode(&turbofish.guts, FRAGMENT).to_string(),
             reverse: turbofish.reverse,
         }
     }
