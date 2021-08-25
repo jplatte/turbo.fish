@@ -49,7 +49,7 @@ impl<'de> Deserialize<'de> for TurboFish {
 fn parse(param: &str) -> Option<TurboFish> {
     match param.as_bytes().get(..3)? {
         b"::<" => {
-            let mid = param[3..].strip_suffix(">")?;
+            let mid = param[3..].strip_suffix('>')?;
             Some(TurboFish::new(mid.to_owned()))
         }
         [b'<', ..] => {
@@ -65,12 +65,12 @@ impl fmt::Display for TurboFish {
         match self {
             Self { guts, reverse: false } => {
                 f.write_str("::<")?;
-                f.write_str(&guts)?;
+                f.write_str(guts)?;
                 f.write_str(">")
             }
             Self { guts, reverse: true } => {
                 f.write_str("<")?;
-                f.write_str(&guts)?;
+                f.write_str(guts)?;
                 f.write_str(">::")
             }
         }

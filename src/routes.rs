@@ -35,7 +35,7 @@ struct TurboFishTpl {
 impl TurboFishTpl {
     fn new(turbofish: TurboFish) -> Self {
         Self {
-            guts: turbofish.guts.replace("<", "<​"),
+            guts: turbofish.guts.replace("<", "<\u{200B}"),
             guts_link: utf8_percent_encode(&turbofish.guts, FRAGMENT).to_string(),
             reverse: turbofish.reverse,
         }
