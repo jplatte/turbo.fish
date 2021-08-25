@@ -1,6 +1,6 @@
 use askama::Template;
 use axum::{
-    extract::Path,
+    extract::{rejection::PathParamsRejection, Path},
     http::StatusCode,
     response::{IntoResponse, Redirect},
 };
@@ -42,8 +42,9 @@ impl TurboFishTpl {
     }
 }
 
-pub async fn turbofish(Path(turbofish): Path<TurboFish>) -> impl IntoResponse {
-    HtmlTemplate(TurboFishTpl::new(turbofish))
+pub async fn turbofish(path: Result<Path<TurboFish>, PathParamsRejection>) -> impl IntoResponse {
+    path.map(|Path(turbofish)| HtmlTemplate(TurboFishTpl::new(turbofish)))
+        .map_err(|_| (StatusCode::NOT_FOUND, HtmlTemplate(NotFoundTpl)))
 }
 
 #[derive(Template)]
