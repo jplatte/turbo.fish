@@ -22,10 +22,10 @@ const FRAGMENT: &AsciiSet = &CONTROLS.add(b' ').add(b'"').add(b'<').add(b'>').ad
 #[tokio::main]
 async fn main() -> Result<(), axum::BoxError> {
     let app = Router::new()
-        .route("/:turbofish", get(routes::turbofish))
+        .route("/", get(routes::index))
         .route("/random", get(routes::random))
         .route("/random_reverse", get(routes::random_reverse))
-        .route("/", get(routes::index))
+        .route("/:turbofish", get(routes::turbofish))
         .nest(
             "/static",
             service_method_routing::get(ServeDir::new("static")).handle_error(
