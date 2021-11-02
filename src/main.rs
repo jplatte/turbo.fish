@@ -2,10 +2,12 @@ use std::{convert::Infallible, net::SocketAddr};
 
 use axum::{
     body::{Bytes, Full},
-    handler::{get, Handler},
+    error_handling::HandleErrorExt,
+    handler::Handler,
     http::{Response, StatusCode},
     response::{Html, IntoResponse},
-    service, Router,
+    routing::{get, service_method_routing},
+    Router,
 };
 use percent_encoding::{AsciiSet, CONTROLS};
 use tower_http::services::ServeDir;
@@ -26,14 +28,16 @@ async fn main() -> Result<(), axum::BoxError> {
         .route("/", get(routes::index))
         .nest(
             "/static",
-            service::get(ServeDir::new("static")).handle_error(|error: std::io::Error| {
-                Ok::<_, Infallible>((
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    format!("Unhandled internal error: {}", error),
-                ))
-            }),
+            service_method_routing::get(ServeDir::new("static")).handle_error(
+                |error: std::io::Error| {
+                    Ok::<_, Infallible>((
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                        format!("Unhandled internal error: {}", error),
+                    ))
+                },
+            ),
         )
-        .or(routes::page_not_found.into_service());
+        .fallback(routes::page_not_found.into_service());
 
     axum::Server::bind(&SocketAddr::from(([127, 0, 0, 1], 8001)))
         .serve(app.into_make_service())
