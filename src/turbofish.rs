@@ -1,6 +1,6 @@
 use std::fmt;
 
-use percent_encoding::{percent_decode_str, utf8_percent_encode};
+use percent_encoding::utf8_percent_encode;
 use serde::de::{self, Deserialize, Deserializer};
 
 use crate::{random::random_type, FRAGMENT};
@@ -37,12 +37,8 @@ impl<'de> Deserialize<'de> for TurboFish {
     where
         D: Deserializer<'de>,
     {
-        parse(
-            &percent_decode_str(&String::deserialize(deserializer)?)
-                .decode_utf8()
-                .map_err(|_| de::Error::custom("invalid URI"))?,
-        )
-        .ok_or_else(|| de::Error::custom("not a turbofish"))
+        parse(&String::deserialize(deserializer)?)
+            .ok_or_else(|| de::Error::custom("not a turbofish"))
     }
 }
 
