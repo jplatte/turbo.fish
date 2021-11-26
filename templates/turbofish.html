@@ -1,5 +1,7 @@
 {% extends "skel.html" %}
-{% block title %}::<{{ guts }}>{% endblock title %}
+{% block title -%}
+    {% if reverse %}<{{ guts }}>::{% else %}::<{{ guts }}>{% endif %}
+{%- endblock title %}
 {% block body_attrs %}{% if reverse %}class="reverse"{% endif %}{% endblock %}
 {% block content %}
 <t><​{{ guts }}></t>
