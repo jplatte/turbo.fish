@@ -10,6 +10,7 @@ use axum::{
     Router,
 };
 use percent_encoding::{AsciiSet, CONTROLS};
+use tokio::signal;
 use tower_http::services::ServeDir;
 
 mod random;
@@ -42,9 +43,30 @@ async fn main() -> Result<(), axum::BoxError> {
     println!("Starting server at http://localhost:8001/");
     axum::Server::bind(&SocketAddr::from(([127, 0, 0, 1], 8001)))
         .serve(app.into_make_service())
+        .with_graceful_shutdown(shutdown_signal())
         .await?;
 
     Ok(())
+}
+
+async fn shutdown_signal() {
+    let ctrl_c = async {
+        signal::ctrl_c().await.expect("failed to install Ctrl+C handler");
+    };
+
+    let terminate = async {
+        signal::unix::signal(signal::unix::SignalKind::terminate())
+            .expect("failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    tokio::select! {
+        _ = ctrl_c => {},
+        _ = terminate => {},
+    }
+
+    println!("signal received, starting graceful shutdown");
 }
 
 // Taken from https://github.com/tokio-rs/axum/blob/02e61dfdd6f05cd87f2edc9475b47974a50ce9f7/examples/templates/src/main.rs
