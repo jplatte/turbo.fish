@@ -3,7 +3,6 @@ use std::{convert::Infallible, net::SocketAddr};
 use axum::{
     handler::Handler,
     http::StatusCode,
-    response::{Html, IntoResponse, Response},
     routing::{get, get_service},
     Router,
 };
@@ -63,23 +62,4 @@ async fn shutdown_signal() {
     }
 
     println!("signal received, starting graceful shutdown");
-}
-
-// Taken from https://github.com/tokio-rs/axum/blob/02e61dfdd6f05cd87f2edc9475b47974a50ce9f7/examples/templates/src/main.rs
-struct HtmlTemplate<T>(T);
-
-impl<T> IntoResponse for HtmlTemplate<T>
-where
-    T: askama::Template,
-{
-    fn into_response(self) -> Response {
-        match self.0.render() {
-            Ok(html) => Html(html).into_response(),
-            Err(err) => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                format!("Failed to render template. Error: {}", err),
-            )
-                .into_response(),
-        }
-    }
 }

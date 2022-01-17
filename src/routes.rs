@@ -6,14 +6,14 @@ use axum::{
 };
 use percent_encoding::utf8_percent_encode;
 
-use crate::{turbofish::TurboFish, HtmlTemplate, FRAGMENT};
+use crate::{turbofish::TurboFish, FRAGMENT};
 
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTpl;
 
 pub async fn index() -> impl IntoResponse {
-    HtmlTemplate(IndexTpl)
+    IndexTpl
 }
 
 pub async fn random() -> impl IntoResponse {
@@ -43,8 +43,8 @@ impl TurboFishTpl {
 }
 
 pub async fn turbofish(path: Result<Path<TurboFish>, PathRejection>) -> impl IntoResponse {
-    path.map(|Path(turbofish)| HtmlTemplate(TurboFishTpl::new(turbofish)))
-        .map_err(|_| (StatusCode::NOT_FOUND, HtmlTemplate(NotFoundTpl)))
+    path.map(|Path(turbofish)| TurboFishTpl::new(turbofish))
+        .map_err(|_| (StatusCode::NOT_FOUND, NotFoundTpl))
 }
 
 #[derive(Template)]
@@ -52,5 +52,5 @@ pub async fn turbofish(path: Result<Path<TurboFish>, PathRejection>) -> impl Int
 struct NotFoundTpl;
 
 pub async fn page_not_found() -> impl IntoResponse {
-    (StatusCode::NOT_FOUND, HtmlTemplate(NotFoundTpl))
+    (StatusCode::NOT_FOUND, NotFoundTpl)
 }
