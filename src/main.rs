@@ -1,12 +1,10 @@
 use std::{convert::Infallible, net::SocketAddr};
 
 use axum::{
-    body::{Bytes, Full},
-    error_handling::HandleErrorExt,
     handler::Handler,
-    http::{Response, StatusCode},
-    response::{Html, IntoResponse},
-    routing::{get, service_method_routing},
+    http::StatusCode,
+    response::{Html, IntoResponse, Response},
+    routing::{get, get_service},
     Router,
 };
 use percent_encoding::{AsciiSet, CONTROLS};
@@ -29,14 +27,12 @@ async fn main() -> Result<(), axum::BoxError> {
         .route("/:turbofish", get(routes::turbofish))
         .nest(
             "/static",
-            service_method_routing::get(ServeDir::new("static")).handle_error(
-                |error: std::io::Error| {
-                    Ok::<_, Infallible>((
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                        format!("Unhandled internal error: {}", error),
-                    ))
-                },
-            ),
+            get_service(ServeDir::new("static")).handle_error(|error: std::io::Error| async move {
+                Ok::<_, Infallible>((
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Unhandled internal error: {}", error),
+                ))
+            }),
         )
         .fallback(routes::page_not_found.into_service());
 
@@ -76,16 +72,14 @@ impl<T> IntoResponse for HtmlTemplate<T>
 where
     T: askama::Template,
 {
-    type Body = Full<Bytes>;
-    type BodyError = Infallible;
-
-    fn into_response(self) -> Response<Self::Body> {
+    fn into_response(self) -> Response {
         match self.0.render() {
             Ok(html) => Html(html).into_response(),
-            Err(err) => Response::builder()
-                .status(StatusCode::INTERNAL_SERVER_ERROR)
-                .body(Full::from(format!("Failed to render template. Error: {}", err)))
-                .unwrap(),
+            Err(err) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to render template. Error: {}", err),
+            )
+                .into_response(),
         }
     }
 }
