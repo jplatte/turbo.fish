@@ -3,7 +3,7 @@ use std::{convert::Infallible, net::SocketAddr};
 use axum::{
     handler::Handler,
     http::StatusCode,
-    routing::{get, get_service},
+    routing::{any_service, get},
     Router,
 };
 use percent_encoding::{AsciiSet, CONTROLS};
@@ -26,7 +26,7 @@ async fn main() -> Result<(), axum::BoxError> {
         .route("/:turbofish", get(routes::turbofish))
         .nest(
             "/static",
-            get_service(ServeDir::new("static")).handle_error(|error: std::io::Error| async move {
+            any_service(ServeDir::new("static")).handle_error(|error: std::io::Error| async move {
                 Ok::<_, Infallible>((
                     StatusCode::INTERNAL_SERVER_ERROR,
                     format!("Unhandled internal error: {}", error),
