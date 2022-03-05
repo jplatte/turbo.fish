@@ -1,4 +1,7 @@
-use std::{convert::Infallible, net::SocketAddr};
+use std::{
+    convert::Infallible,
+    net::{Ipv4Addr, SocketAddr},
+};
 
 use axum::{
     handler::Handler,
@@ -36,7 +39,7 @@ async fn main() -> Result<(), axum::BoxError> {
         .fallback(routes::page_not_found.into_service());
 
     println!("Starting server at http://localhost:8001/");
-    axum::Server::bind(&SocketAddr::from(([127, 0, 0, 1], 8001)))
+    axum::Server::bind(&SocketAddr::from((Ipv4Addr::LOCALHOST, 8001)))
         .serve(app.into_make_service())
         .with_graceful_shutdown(shutdown_signal())
         .await?;
