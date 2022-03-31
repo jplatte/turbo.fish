@@ -7,12 +7,12 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-askama = { version = "0.11.0", features = ["with-axum"] }
-askama_axum = "0.1.0"
-axum = { version = "0.4.4", default-features = false, features = ["http1", "http2"] }
+askama = { version = "0.11.0", git = "https://github.com/djc/askama", rev = "c441459", features = ["with-axum"] }
+askama_axum = { version = "0.1.0", git = "https://github.com/djc/askama", rev = "c441459" }
+axum = { version = "0.5.0", default-features = false, features = ["http1", "http2"] }
 itertools = { version = "0.10.1", default-features = false }
 percent-encoding = "2.1.0"
 rand = "0.8.3"
 serde = "1.0.129"
 tokio = { version = "1.10.0", features = ["macros", "rt-multi-thread", "signal"] }
-tower-http = { version = "0.2.0", features = ["fs"] }
+tower-http = { version = "0.3.0", features = ["fs"] }
