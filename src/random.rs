@@ -6,7 +6,6 @@ const RECURSION_LIMIT: u8 = 1;
 
 const TYPES: &[&[&str]] = &[
     &["_"],
-    &["()"],
     &["bool"],
     &["char"],
     &["i8"],
