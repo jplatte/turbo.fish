@@ -11,7 +11,7 @@ pub struct TurboFish {
 }
 
 impl TurboFish {
-    pub fn new(guts: Box<str>) -> TurboFish {
+    pub const fn new(guts: Box<str>) -> TurboFish {
         TurboFish { guts, reverse: false }
     }
 
@@ -19,7 +19,7 @@ impl TurboFish {
         TurboFish::new(random_type().into_boxed_str())
     }
 
-    pub fn reverse(guts: Box<str>) -> TurboFish {
+    pub const fn reverse(guts: Box<str>) -> TurboFish {
         TurboFish { guts, reverse: true }
     }
 
