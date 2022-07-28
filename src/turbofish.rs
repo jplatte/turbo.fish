@@ -15,12 +15,12 @@ impl TurboFish {
         TurboFish { guts, reverse: false }
     }
 
-    pub fn random() -> TurboFish {
-        TurboFish::new(random_type().into_boxed_str())
-    }
-
     pub const fn reverse(guts: Box<str>) -> TurboFish {
         TurboFish { guts, reverse: true }
+    }
+
+    pub fn random() -> TurboFish {
+        TurboFish::new(random_type().into_boxed_str())
     }
 
     pub fn random_reverse() -> TurboFish {
