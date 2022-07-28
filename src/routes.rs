@@ -35,7 +35,7 @@ struct TurboFishTpl {
 impl TurboFishTpl {
     fn new(turbofish: TurboFish) -> Self {
         Self {
-            guts: turbofish.guts.replace("<", "<\u{200B}").into_boxed_str(),
+            guts: turbofish.guts.replace('<', "<\u{200B}").into_boxed_str(),
             guts_link: utf8_percent_encode(&turbofish.guts, FRAGMENT)
                 .collect::<String>()
                 .into_boxed_str(),
