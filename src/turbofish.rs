@@ -6,29 +6,29 @@ use serde::de::{self, Deserialize, Deserializer};
 use crate::{random::random_type, FRAGMENT};
 
 pub struct TurboFish {
-    pub guts: String,
+    pub guts: Box<str>,
     pub reverse: bool,
 }
 
 impl TurboFish {
-    pub fn new(guts: String) -> TurboFish {
+    pub fn new(guts: Box<str>) -> TurboFish {
         TurboFish { guts, reverse: false }
     }
 
     pub fn random() -> TurboFish {
-        TurboFish::new(random_type())
+        TurboFish::new(random_type().into_boxed_str())
     }
 
-    pub fn reverse(guts: String) -> TurboFish {
+    pub fn reverse(guts: Box<str>) -> TurboFish {
         TurboFish { guts, reverse: true }
     }
 
     pub fn random_reverse() -> TurboFish {
-        TurboFish::reverse(random_type())
+        TurboFish::reverse(random_type().into_boxed_str())
     }
 
     pub fn to_uri_segment(&self) -> String {
-        utf8_percent_encode(&self.to_string(), FRAGMENT).to_string()
+        utf8_percent_encode(&self.to_string(), FRAGMENT).collect()
     }
 }
 
@@ -46,11 +46,11 @@ fn parse(param: &str) -> Option<TurboFish> {
     match param.as_bytes().get(..3)? {
         b"::<" => {
             let mid = param[3..].strip_suffix('>')?;
-            Some(TurboFish::new(mid.to_owned()))
+            Some(TurboFish::new(mid.into()))
         }
         [b'<', ..] => {
             let mid = param[1..].strip_suffix(">::")?;
-            Some(TurboFish::reverse(mid.to_owned()))
+            Some(TurboFish::reverse(mid.into()))
         }
         _ => None,
     }
