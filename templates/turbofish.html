@@ -1,27 +1,19 @@
 {% extends "skel.html" %}
 {% block title -%}
-    {% if reverse %}<{{ guts }}>::{% else %}::<{{ guts }}>{% endif %}
+    {{fish}}
 {%- endblock title %}
-{% block body_attrs %}{% if reverse %}class="reverse"{% endif %}{% endblock %}
+{% block body_attrs %}{% if fish.reverse %}class="reverse"{% endif %}{% endblock %}
 {% block content %}
-<t><​{{ guts }}></t>
-<u><​{{ guts }}></u>
-<r><​{{ guts }}></r>
-<b><​{{ guts }}></b>
-<o><​{{ guts }}></o>
-<f><​{{ guts }}></f>
-<i><​{{ guts }}></i>
-<s><​{{ guts }}></s>
-<h><​{{ guts }}></h>
+
+{% for tag in "turbofish".chars() -%}
+    <{{ tag }}>{{ fish.fish }}</{{ tag }}>
+{%- endfor %}
 
 {% let random_link -%}
-{% let reverse_link -%}
-{% if reverse -%}
+{% if fish.reverse -%}
     {% let random_link = "/random_reverse" -%}
-    {% let reverse_link = "/::<{}>"|format(guts_link) -%}
 {% else -%}
     {% let random_link = "/random" -%}
-    {% let reverse_link = "/<{}>::"|format(guts_link) -%}
 {% endif -%}
 
 <footer>

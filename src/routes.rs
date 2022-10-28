@@ -27,17 +27,15 @@ pub async fn random_reverse() -> impl IntoResponse {
 #[derive(Template)]
 #[template(path = "turbofish.html")]
 struct TurboFishTpl {
-    guts: String,
-    guts_link: String,
-    reverse: bool,
+    fish: TurboFish,
+    reverse_link: String,
 }
 
 impl TurboFishTpl {
     fn new(turbofish: TurboFish) -> Self {
         Self {
-            guts: turbofish.guts.replace("<", "<\u{200B}"),
-            guts_link: utf8_percent_encode(&turbofish.guts, FRAGMENT).to_string(),
-            reverse: turbofish.reverse,
+            reverse_link: format!("/{}", utf8_percent_encode(&format!("{:#}", turbofish), FRAGMENT)), // field first for eval order
+            fish: turbofish,
         }
     }
 }

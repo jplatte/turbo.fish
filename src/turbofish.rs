@@ -5,26 +5,42 @@ use serde::de::{self, Deserialize, Deserializer};
 
 use crate::{random::random_type, FRAGMENT};
 
+pub enum Fish {
+    Fish(String),
+    Unit,
+}
+
+impl fmt::Display for Fish {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Fish(guts) => write!(f, "<{guts}>"),
+            Self::Unit => write!(f, "()"),
+        }
+    }
+}
+
 pub struct TurboFish {
-    pub guts: String,
+    pub fish: Fish,
     pub reverse: bool,
 }
 
 impl TurboFish {
-    pub fn new(guts: String) -> TurboFish {
-        TurboFish { guts, reverse: false }
+    pub fn new(fish: Fish) -> TurboFish {
+        TurboFish { fish, reverse: false }
     }
 
     pub fn random() -> TurboFish {
-        TurboFish::new(random_type())
+        let random = random_type();
+        let random = if random == "()" { Fish::Unit } else { Fish::Fish(random) };
+        TurboFish::new(random)
     }
 
-    pub fn reverse(guts: String) -> TurboFish {
-        TurboFish { guts, reverse: true }
+    pub fn reverse(fish: Fish) -> TurboFish {
+        TurboFish { fish, reverse: true }
     }
 
     pub fn random_reverse() -> TurboFish {
-        TurboFish::reverse(random_type())
+        Self { reverse: true, ..Self::random() }
     }
 
     pub fn to_uri_segment(&self) -> String {
@@ -43,14 +59,14 @@ impl<'de> Deserialize<'de> for TurboFish {
 }
 
 fn parse(param: &str) -> Option<TurboFish> {
-    match param.as_bytes().get(..3)? {
-        b"::<" => {
-            let mid = param[3..].strip_suffix('>')?;
-            Some(TurboFish::new(mid.to_owned()))
+    match param.as_bytes() {
+        b"::()" | b"::<()>" => return Some(TurboFish::new(Fish::Unit)),
+        b"()::" | b"<()>::" => return Some(TurboFish::reverse(Fish::Unit)),
+        [b':', b':', b'<', mid @ .., b'>'] => {
+            Some(TurboFish::new(Fish::Fish(std::str::from_utf8(mid).unwrap().to_owned())))
         }
-        [b'<', ..] => {
-            let mid = param[1..].strip_suffix(">::")?;
-            Some(TurboFish::reverse(mid.to_owned()))
+        [b'<', mid @ .., b'>', b':', b':'] => {
+            Some(TurboFish::reverse(Fish::Fish(std::str::from_utf8(mid).unwrap().to_owned())))
         }
         _ => None,
     }
@@ -58,17 +74,10 @@ fn parse(param: &str) -> Option<TurboFish> {
 
 impl fmt::Display for TurboFish {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self { guts, reverse: false } => {
-                f.write_str("::<")?;
-                f.write_str(guts)?;
-                f.write_str(">")
-            }
-            Self { guts, reverse: true } => {
-                f.write_str("<")?;
-                f.write_str(guts)?;
-                f.write_str(">::")
-            }
+        if self.reverse ^ f.alternate() {
+            write!(f, "{}::", self.fish)
+        } else {
+            write!(f, "::{}", self.fish)
         }
     }
 }
