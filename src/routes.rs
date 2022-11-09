@@ -1,19 +1,19 @@
-use askama::Template;
+use std::sync::Arc;
+
 use axum::{
     extract::{rejection::PathRejection, Path},
     http::StatusCode,
-    response::{IntoResponse, Redirect},
+    response::{Html, IntoResponse, Redirect},
+    Extension,
 };
+use minijinja::{context, Environment};
 use percent_encoding::utf8_percent_encode;
+use serde::Serialize;
 
 use crate::{turbofish::TurboFish, FRAGMENT};
 
-#[derive(Template)]
-#[template(path = "index.html")]
-struct IndexTpl;
-
-pub async fn index() -> impl IntoResponse {
-    IndexTpl
+pub async fn index(env: Extension<Arc<Environment<'static>>>) -> impl IntoResponse {
+    render_html_template(&env, "index", ())
 }
 
 pub async fn random() -> impl IntoResponse {
@@ -24,33 +24,46 @@ pub async fn random_reverse() -> impl IntoResponse {
     Redirect::to(&format!("/{}", TurboFish::random_reverse().to_uri_segment()))
 }
 
-#[derive(Template)]
-#[template(path = "turbofish.html")]
-struct TurboFishTpl {
-    guts: String,
-    guts_link: String,
-    reverse: bool,
-}
-
-impl TurboFishTpl {
-    fn new(turbofish: TurboFish) -> Self {
-        Self {
-            guts: turbofish.guts.replace("<", "<\u{200B}"),
-            guts_link: utf8_percent_encode(&turbofish.guts, FRAGMENT).to_string(),
-            reverse: turbofish.reverse,
-        }
+pub async fn turbofish(
+    env: Extension<Arc<Environment<'static>>>,
+    path: Result<Path<TurboFish>, PathRejection>,
+) -> impl IntoResponse {
+    match path {
+        Ok(Path(turbofish)) => Ok(render_html_template(
+            &env,
+            "turbofish",
+            context! {
+                guts => turbofish.guts.replace('<', "<\u{200B}"),
+                guts_link => utf8_percent_encode(&turbofish.guts, FRAGMENT).to_string(),
+                reverse => turbofish.reverse,
+            },
+        )),
+        Err(_) => Err(page_not_found(env).await),
     }
 }
 
-pub async fn turbofish(path: Result<Path<TurboFish>, PathRejection>) -> impl IntoResponse {
-    path.map(|Path(turbofish)| TurboFishTpl::new(turbofish))
-        .map_err(|_| (StatusCode::NOT_FOUND, NotFoundTpl))
+pub async fn page_not_found(env: Extension<Arc<Environment<'static>>>) -> impl IntoResponse {
+    render_html_template(&env, "404", ()).map(|ok| (StatusCode::NOT_FOUND, ok))
 }
 
-#[derive(Template)]
-#[template(path = "404.html")]
-struct NotFoundTpl;
+fn render_html_template<S>(
+    env: &Environment<'_>,
+    name: &str,
+    ctx: S,
+) -> Result<Html<String>, impl IntoResponse>
+where
+    S: Serialize,
+{
+    let Ok(template) = env.get_template(name) else {
+        return Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Couldn't find MiniJinja template".to_owned(),
+        ));
+    };
 
-pub async fn page_not_found() -> impl IntoResponse {
-    (StatusCode::NOT_FOUND, NotFoundTpl)
+    let rendered = template.render(ctx).map_err(|e| {
+        (StatusCode::INTERNAL_SERVER_ERROR, format!("Failed to render MiniJinja template: {e}"))
+    })?;
+
+    Ok(Html(rendered))
 }

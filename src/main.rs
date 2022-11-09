@@ -1,14 +1,16 @@
 use std::{
     convert::Infallible,
     net::{Ipv4Addr, SocketAddr},
+    sync::Arc,
 };
 
 use axum::{
     handler::Handler,
     http::StatusCode,
     routing::{any_service, get},
-    Router,
+    Extension, Router,
 };
+use minijinja::Environment;
 use percent_encoding::{AsciiSet, CONTROLS};
 use tokio::signal;
 use tower_http::services::ServeDir;
@@ -20,8 +22,19 @@ mod turbofish;
 /// https://url.spec.whatwg.org/#fragment-percent-encode-set
 const FRAGMENT: &AsciiSet = &CONTROLS.add(b' ').add(b'"').add(b'<').add(b'>').add(b'`');
 
+const TPL_404: &str = include_str!("../templates/404.html");
+const TPL_INDEX: &str = include_str!("../templates/index.html");
+const TPL_SKEL: &str = include_str!("../templates/skel.html");
+const TPL_TURBOFISH: &str = include_str!("../templates/turbofish.html");
+
 #[tokio::main]
 async fn main() -> Result<(), axum::BoxError> {
+    let mut minijinja_env = Environment::new();
+    minijinja_env.add_template("404", TPL_404)?;
+    minijinja_env.add_template("index", TPL_INDEX)?;
+    minijinja_env.add_template("skel", TPL_SKEL)?;
+    minijinja_env.add_template("turbofish", TPL_TURBOFISH)?;
+
     let app = Router::new()
         .route("/", get(routes::index))
         .route("/random", get(routes::random))
@@ -36,7 +49,8 @@ async fn main() -> Result<(), axum::BoxError> {
                 ))
             }),
         )
-        .fallback(routes::page_not_found.into_service());
+        .fallback(routes::page_not_found.into_service())
+        .layer(Extension(Arc::new(minijinja_env)));
 
     println!("Starting server at http://localhost:8001/");
     axum::Server::bind(&SocketAddr::from((Ipv4Addr::LOCALHOST, 8001)))

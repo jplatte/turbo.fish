@@ -1,7 +1,7 @@
-{% extends "skel.html" %}
+{% extends "skel" %}
 {% block title -%}
     {% if reverse %}<{{ guts }}>::{% else %}::<{{ guts }}>{% endif %}
-{%- endblock title %}
+{%- endblock %}
 {% block body_attrs %}{% if reverse %}class="reverse"{% endif %}{% endblock %}
 {% block content %}
 <t><​{{ guts }}></t>
@@ -14,14 +14,12 @@
 <s><​{{ guts }}></s>
 <h><​{{ guts }}></h>
 
-{% let random_link -%}
-{% let reverse_link -%}
 {% if reverse -%}
-    {% let random_link = "/random_reverse" -%}
-    {% let reverse_link = "/::<{}>"|format(guts_link) -%}
+    {% set random_link = "/random_reverse" -%}
+    {% set reverse_link %}/::<{{ guts_link }}>{% endset -%}
 {% else -%}
-    {% let random_link = "/random" -%}
-    {% let reverse_link = "/<{}>::"|format(guts_link) -%}
+    {% set random_link = "/random" -%}
+    {% set reverse_link %}/<{{ guts_link }}>::{% endset -%}
 {% endif -%}
 
 <footer>
@@ -31,4 +29,4 @@
     <a href="{{ random_link }}">random!</a>
     <a href="{{ reverse_link }}">reverse!</a>
 </footer>
-{% endblock content %}
+{% endblock %}
