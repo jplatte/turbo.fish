@@ -1,10 +1,9 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::{rejection::PathRejection, Path},
+    extract::{rejection::PathRejection, Path, State},
     http::StatusCode,
     response::{Html, IntoResponse, Redirect},
-    Extension,
 };
 use minijinja::{context, Environment};
 use percent_encoding::utf8_percent_encode;
@@ -12,7 +11,7 @@ use serde::Serialize;
 
 use crate::{turbofish::TurboFish, FRAGMENT};
 
-pub async fn index(env: Extension<Arc<Environment<'static>>>) -> impl IntoResponse {
+pub async fn index(env: State<Arc<Environment<'static>>>) -> impl IntoResponse {
     render_html_template(&env, "index", ())
 }
 
@@ -25,7 +24,7 @@ pub async fn random_reverse() -> impl IntoResponse {
 }
 
 pub async fn turbofish(
-    env: Extension<Arc<Environment<'static>>>,
+    env: State<Arc<Environment<'static>>>,
     path: Result<Path<TurboFish>, PathRejection>,
 ) -> impl IntoResponse {
     match path {
@@ -42,7 +41,7 @@ pub async fn turbofish(
     }
 }
 
-pub async fn page_not_found(env: Extension<Arc<Environment<'static>>>) -> impl IntoResponse {
+pub async fn page_not_found(env: State<Arc<Environment<'static>>>) -> impl IntoResponse {
     render_html_template(&env, "404", ()).map(|ok| (StatusCode::NOT_FOUND, ok))
 }
 

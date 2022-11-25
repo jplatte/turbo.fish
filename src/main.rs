@@ -4,12 +4,7 @@ use std::{
     sync::Arc,
 };
 
-use axum::{
-    handler::Handler,
-    http::StatusCode,
-    routing::{any_service, get},
-    Extension, Router,
-};
+use axum::{error_handling::HandleError, http::StatusCode, routing::get, Router};
 use minijinja::Environment;
 use percent_encoding::{AsciiSet, CONTROLS};
 use tokio::signal;
@@ -40,17 +35,17 @@ async fn main() -> Result<(), axum::BoxError> {
         .route("/random", get(routes::random))
         .route("/random_reverse", get(routes::random_reverse))
         .route("/:turbofish", get(routes::turbofish))
-        .nest(
+        .nest_service(
             "/static",
-            any_service(ServeDir::new("static")).handle_error(|error: std::io::Error| async move {
+            HandleError::new(ServeDir::new("static"), |error: std::io::Error| async move {
                 Ok::<_, Infallible>((
                     StatusCode::INTERNAL_SERVER_ERROR,
                     format!("Unhandled internal error: {}", error),
                 ))
             }),
         )
-        .fallback(routes::page_not_found.into_service())
-        .layer(Extension(Arc::new(minijinja_env)));
+        .fallback(routes::page_not_found)
+        .with_state(Arc::new(minijinja_env));
 
     println!("Starting server at http://localhost:8001/");
     axum::Server::bind(&SocketAddr::from((Ipv4Addr::LOCALHOST, 8001)))
