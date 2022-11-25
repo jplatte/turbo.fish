@@ -1,6 +1,7 @@
 use std::{
     convert::Infallible,
     net::{Ipv4Addr, SocketAddr},
+    process::ExitCode,
     sync::Arc,
 };
 
@@ -22,8 +23,22 @@ const TPL_INDEX: &str = include_str!("../templates/index.html");
 const TPL_SKEL: &str = include_str!("../templates/skel.html");
 const TPL_TURBOFISH: &str = include_str!("../templates/turbofish.html");
 
-#[tokio::main]
-async fn main() -> Result<(), axum::BoxError> {
+fn main() -> ExitCode {
+    match tokio::runtime::Runtime::new()
+        .expect("Failed to build the tokio Runtime")
+        .block_on(async_main())
+    {
+        Ok(_) => ExitCode::SUCCESS,
+        Err(e) => {
+            // Don't return `Result` from `main` as that would print the
+            // `Debug` formatting of the error, `Display` is nicer.
+            eprintln!("{e}");
+            ExitCode::FAILURE
+        }
+    }
+}
+
+async fn async_main() -> Result<(), axum::BoxError> {
     let mut minijinja_env = Environment::new();
     minijinja_env.add_template("404", TPL_404)?;
     minijinja_env.add_template("index", TPL_INDEX)?;
@@ -68,10 +83,8 @@ async fn shutdown_signal() {
             .await;
     };
 
-    tokio::select! {
-        _ = ctrl_c => {},
-        _ = terminate => {},
-    }
+    // Box::pin required, see https://github.com/rust-lang/rust/issues/82187
+    futures_util::future::select(Box::pin(ctrl_c), Box::pin(terminate)).await;
 
     println!("signal received, starting graceful shutdown");
 }
