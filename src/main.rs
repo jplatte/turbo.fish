@@ -19,6 +19,7 @@ mod turbofish;
 const FRAGMENT: &AsciiSet = &CONTROLS.add(b' ').add(b'"').add(b'<').add(b'>').add(b'`');
 
 const TPL_404: &str = include_str!("../templates/404.html");
+const TPL_ABOUT: &str = include_str!("../templates/about.html");
 const TPL_INDEX: &str = include_str!("../templates/index.html");
 const TPL_SKEL: &str = include_str!("../templates/skel.html");
 const TPL_TURBOFISH: &str = include_str!("../templates/turbofish.html");
@@ -41,12 +42,14 @@ fn main() -> ExitCode {
 async fn async_main() -> Result<(), axum::BoxError> {
     let mut minijinja_env = Environment::new();
     minijinja_env.add_template("404", TPL_404)?;
+    minijinja_env.add_template("about", TPL_ABOUT)?;
     minijinja_env.add_template("index", TPL_INDEX)?;
     minijinja_env.add_template("skel", TPL_SKEL)?;
     minijinja_env.add_template("turbofish", TPL_TURBOFISH)?;
 
     let app = Router::new()
         .route("/", get(routes::index))
+        .route("/about", get(routes::about))
         .route("/random", get(routes::random))
         .route("/random_reverse", get(routes::random_reverse))
         .route("/:turbofish", get(routes::turbofish))

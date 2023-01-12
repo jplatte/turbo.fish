@@ -171,3 +171,30 @@ turbofish::after {
     content: '>';
     color: #fff;
 }
+
+/* Styling for the about page */
+body.about {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    line-height: 150%;
+    font-size: 75%;
+}
+
+.fish-body a {
+    color: #f74c00;
+    transition: color .2s;
+}
+
+.fish-body a:hover {
+    color: #fc7335;
+}
+
+.fish-head {
+    display: flex;
+}
+
+.fish-body {
+    padding-left: 150px;
+    padding-right: 150px;
+}
