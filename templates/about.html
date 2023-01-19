@@ -1,0 +1,35 @@
+{% extends "skel" %}
+{% block title %}::<About>{% endblock %}
+{% block body_attrs %}class="about"{% endblock %}
+{% block content %}
+
+<h1 class="fish-head">about::<turbofish>Turbofish</turbofish>()</h1>
+
+<div class="fish-body">
+    A website dedicated to the turbofish syntax from the <a href="https://www.rust-lang.org">Rust Programming Language</a>, and its guardian angel, Anna Harren.
+    <br><br>
+    <a href="https://www.reddit.com/r/rust/comments/3fimgp/comment/ctozkd0">In the comments of a Reddit thread</a>,
+    the name "turbofish" was coined for the first time by a developer named <a href="https://bawk.space">Anna Harren</a> (u/deadstone), and was used
+    by both the community and official documentation.
+    <br><br>
+    Sadly, she passed away in 2021, but she will forever be memorialized within Rust:
+    <a href="https://github.com/rust-lang/rust/blob/4887cb18dc2ef5b1bf3fc50ce6c267fde085032b/tests/ui/parser/bastion-of-the-turbofish.rs#L32">(1)</a>
+    <a href="https://blog.rust-lang.org/2021/09/09/Rust-1.55.0.html#dedication">(2)</a>
+    <a href="https://doc.rust-lang.org/stable/src/core/iter/traits/iterator.rs.html#1738">(3)</a>
+    <br><br>
+
+    <strong>More Turbofish Lore:</strong><br>
+    - The official explanation for why the turbofish <del>prevails</del> exists:
+    <a href="https://github.com/rust-lang/rust/blob/master/tests/ui/parser/bastion-of-the-turbofish.rs">Bastion of the Turbofish</a></li><br>
+    - Why turbo.fish also has reversed turbofish:
+    <a href="https://users.rust-lang.org/t/what-is-the-proper-term-for-an-ufcs-flavored-paths/9570">"What is the proper term for an 'UFCS'-flavored paths?"</a></li><br>
+    - A guide on how to use the turbofish and what it does:
+    <a href="https://matematikaadit.github.io/posts/rust-turbofish.html">"Where to put the turbofish"</a></li><br>
+</div>
+
+<footer>
+    <a href="/about">what?</a>
+    <a href="https://github.com/jplatte/turbo.fish">code.</a>
+    <a href="{{ random_link }}">random!</a>
+</footer>
+{% endblock %}

@@ -15,6 +15,10 @@ pub async fn index(env: State<Arc<Environment<'static>>>) -> impl IntoResponse {
     render_html_template(&env, "index", ())
 }
 
+pub async fn about(env: State<Arc<Environment<'static>>>) -> impl IntoResponse {
+    render_html_template(&env, "about", ())
+}
+
 pub async fn random() -> impl IntoResponse {
     Redirect::to(&format!("/{}", TurboFish::random().to_uri_segment()))
 }
