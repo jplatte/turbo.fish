@@ -177,7 +177,6 @@ body.about {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    line-height: 150%;
 }
 
 .fish-body a {
@@ -189,11 +188,8 @@ body.about {
     color: #fc7335;
 }
 
-.fish-head {
-    display: flex;
-}
-
 .fish-body {
-    padding-left: 150px;
-    padding-right: 150px;
+    max-width: 96ch;
+    padding: 1em;
+    line-height: 150%;
 }
