@@ -193,3 +193,8 @@ body.about {
     padding: 1em;
     line-height: 150%;
 }
+
+.fish-body ul {
+    padding-left: 2ch;
+    list-style: '- ';
+}
