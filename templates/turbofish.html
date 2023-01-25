@@ -4,15 +4,17 @@
 {%- endblock %}
 {% block body_attrs %}{% if reverse %}class="reverse"{% endif %}{% endblock %}
 {% block content %}
-<t><​{{ guts }}></t>
-<u><​{{ guts }}></u>
-<r><​{{ guts }}></r>
-<b><​{{ guts }}></b>
-<o><​{{ guts }}></o>
-<f><​{{ guts }}></f>
-<i><​{{ guts }}></i>
-<s><​{{ guts }}></s>
-<h><​{{ guts }}></h>
+<main aria-description="turbofishes swimming across the screen">
+    <t><​{{ guts }}></t>
+    <u><​{{ guts }}></u>
+    <r><​{{ guts }}></r>
+    <b><​{{ guts }}></b>
+    <o><​{{ guts }}></o>
+    <f><​{{ guts }}></f>
+    <i><​{{ guts }}></i>
+    <s><​{{ guts }}></s>
+    <h><​{{ guts }}></h>
+</main>
 
 {% if reverse -%}
     {% set random_link = "/random_reverse" -%}
