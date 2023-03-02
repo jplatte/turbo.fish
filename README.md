@@ -13,13 +13,13 @@ Sadly, [she passed away in 2021][rust-1.55.0-dedication], but she will forever b
 - Why turbo.fish also has reversed a turbofish: ["What is the proper term for an 'UFCS'-flavored paths?"][ufcs]
 - A guide on how to use the turbofish and what it does: ["Where to put the turbofish"][guide]
 
-A little joke website about a piece of syntax in the [Rust Programming Language][rust-lang.org].
+A little joke website about a piece of syntax in the [Rust Programming Language][Rust Programming Language].
 
-The name "turbofish" was made up by reddit user deadstone in 2015 ([reddit thread][]), and has
+The name "turbofish" was made up by reddit user deadstone in 2015 ([reddit thread][reddit]), and has
 since caught on in the Rust community, being used even in the [official documentation][docs].
 
 For information about what the turbofish does and when you should use it, take a look at
-[this blog post][blog-post].
+[this blog post][guide].
 
 [Rust Programming Language]: https://www.rust-lang.org/
 [reddit]: https://www.reddit.com/r/rust/comments/3fimgp/comment/ctozkd0
@@ -27,6 +27,7 @@ For information about what the turbofish does and when you should use it, take a
 [Bastion of the Turbofish]: https://github.com/rust-lang/rust/blob/master/tests/ui/parser/bastion-of-the-turbofish.rs
 [ufcs]: https://users.rust-lang.org/t/what-is-the-proper-term-for-an-ufcs-flavored-paths/9570
 [guide]:https://matematikaadit.github.io/posts/rust-turbofish.html
+[docs]: https://docs.rs/syn/latest/syn/struct.Turbofish.html
 
 ## LICENSE
 
