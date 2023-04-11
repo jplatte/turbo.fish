@@ -171,7 +171,7 @@ turbofish::after {
 
 /* Styling for the about page */
 body.about {
-    height: 100vh;
+    height: 100dvh;
     overflow-y: auto;
 }
 
