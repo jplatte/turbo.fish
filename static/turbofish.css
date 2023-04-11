@@ -6,25 +6,22 @@
 /* Basic layout */
 html {
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 *, *:before, *:after {
     box-sizing: inherit;
 }
 
-html, body {
-    height: 100%;
-}
-
 body {
     font-family: 'Droid Sans Mono', sans-serif;
     background-color: #111;
     color: #fff;
-    overflow: hidden;
+}
 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+main {
+    position: absolute;
+    right: 0;
 }
 
 footer {
@@ -52,8 +49,8 @@ footer a:hover {
 /* Magic */
 t, u, r, b, o, f, i, s, h {
     display: flex;
-    font-size: 9vh;
-    padding: 1vh;
+    font-size: 9.111svh;
+    padding: 1svh;
     line-height: 1;
     text-decoration: none;
     white-space: nowrap;
@@ -174,9 +171,19 @@ turbofish::after {
 
 /* Styling for the about page */
 body.about {
+    height: 100vh;
+    overflow-y: auto;
+
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding-bottom: 1em;
+}
+
+h1 {
+    margin: 2rem 0 0;
+    font-size: min(2em, 7vw);
 }
 
 .fish-body a {
