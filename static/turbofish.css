@@ -19,7 +19,7 @@ body {
     color: #fff;
 }
 
-main {
+.pond {
     position: absolute;
     right: 0;
 }
@@ -173,7 +173,9 @@ turbofish::after {
 body.about {
     height: 100vh;
     overflow-y: auto;
+}
 
+body.about main {
     display: flex;
     flex-direction: column;
     justify-content: center;
