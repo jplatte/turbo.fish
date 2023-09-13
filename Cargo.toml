@@ -10,7 +10,7 @@ edition = "2018"
 axum = { version = "0.6.18", default-features = false, features = ["http1", "http2", "tokio"] }
 futures-util = { version = "0.3.28", default-features = false }
 itertools = { version = "0.11.0", default-features = false }
-minijinja = "0.34.0"
+minijinja = "1.0.7"
 percent-encoding = "2.3.0"
 rand = "0.8.5"
 serde = "1.0.164"
