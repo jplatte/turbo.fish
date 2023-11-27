@@ -1,13 +1,9 @@
-use std::{
-    net::{Ipv4Addr, SocketAddr},
-    process::ExitCode,
-    sync::Arc,
-};
+use std::{net::Ipv4Addr, process::ExitCode, sync::Arc};
 
 use axum::{routing::get, Router};
 use minijinja::Environment;
 use percent_encoding::{AsciiSet, CONTROLS};
-use tokio::signal;
+use tokio::net::TcpListener;
 use tower_http::services::ServeDir;
 
 mod random;
@@ -57,28 +53,8 @@ async fn async_main() -> Result<(), axum::BoxError> {
         .with_state(Arc::new(minijinja_env));
 
     println!("Starting server at http://localhost:8001/");
-    axum::Server::bind(&SocketAddr::from((Ipv4Addr::LOCALHOST, 8001)))
-        .serve(app.into_make_service())
-        .with_graceful_shutdown(shutdown_signal())
-        .await?;
+    let listener = TcpListener::bind((Ipv4Addr::LOCALHOST, 8001)).await?;
+    axum::serve(listener, app).await?;
 
     Ok(())
-}
-
-async fn shutdown_signal() {
-    let ctrl_c = async {
-        signal::ctrl_c().await.expect("failed to install Ctrl+C handler");
-    };
-
-    let terminate = async {
-        signal::unix::signal(signal::unix::SignalKind::terminate())
-            .expect("failed to install signal handler")
-            .recv()
-            .await;
-    };
-
-    // Box::pin required, see https://github.com/rust-lang/rust/issues/82187
-    futures_util::future::select(Box::pin(ctrl_c), Box::pin(terminate)).await;
-
-    println!("signal received, starting graceful shutdown");
 }
