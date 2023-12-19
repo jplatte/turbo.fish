@@ -17,6 +17,12 @@
 <body {% block body_attrs %}{% endblock %}>
 
 {% block content %}{% endblock %}
+<footer>
+    {% block footer_about %}<a href="/about">what?</a>{% endblock %}
+    <a href="https://github.com/jplatte/turbo.fish">code.</a>
+    <a href="/random">random!</a>
+    {% block footer_extra %}{% endblock %}
+</footer>
 
 </body>
 

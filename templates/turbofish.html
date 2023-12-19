@@ -15,7 +15,8 @@
     <s><​{{ guts }}></s>
     <h><​{{ guts }}></h>
 </main>
-
+{% endblock %}
+{% block footer_extra %}
 {% if reverse -%}
     {% set random_link = "/random_reverse" -%}
     {% set reverse_link %}/::<{{ guts_link }}>{% endset -%}
@@ -23,11 +24,5 @@
     {% set random_link = "/random" -%}
     {% set reverse_link %}/<{{ guts_link }}>::{% endset -%}
 {% endif -%}
-
-<footer>
-    <a href="/about">what?</a>
-    <a href="https://github.com/jplatte/turbo.fish">code.</a>
-    <a href="{{ random_link }}">random!</a>
-    <a href="{{ reverse_link }}">reverse!</a>
-</footer>
+<a href="{{ reverse_link }}">reverse!</a>
 {% endblock %}
