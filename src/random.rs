@@ -1,6 +1,6 @@
 use itertools::Itertools;
-use rand::{prelude::ThreadRng, seq::SliceRandom};
-use std::borrow::Cow;
+use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng as _};
+use std::{borrow::Cow, cell::RefCell};
 
 const RECURSION_LIMIT: u8 = 1;
 
@@ -33,11 +33,15 @@ const TYPES: &[&[&str]] = &[
     &["HashMap<", ", ", ">"],
 ];
 
-pub fn random_type() -> String {
-    random_type_depth(0, &mut rand::thread_rng())
+thread_local! {
+    static RNG: RefCell<SmallRng> = RefCell::new(SmallRng::from_entropy());
 }
 
-fn random_type_depth(depth: u8, rng: &mut ThreadRng) -> String {
+pub fn random_type() -> String {
+    RNG.with_borrow_mut(|rng| random_type_depth(0, rng))
+}
+
+fn random_type_depth(depth: u8, rng: &mut SmallRng) -> String {
     let &ty = TYPES.choose(rng).unwrap();
     Itertools::intersperse_with(ty.iter().map(|&x| Cow::Borrowed(x)), || {
         if depth == RECURSION_LIMIT {
