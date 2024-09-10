@@ -1,10 +1,15 @@
 use std::{net::Ipv4Addr, process::ExitCode, sync::Arc};
 
-use axum::{Router, extract::Request, middleware::Next, routing::get};
 use minijinja::Environment;
 use percent_encoding::{AsciiSet, CONTROLS};
 use tokio::net::TcpListener;
-use tower_http::services::ServeDir;
+use zon::{
+    Body, IntoHttpService as _,
+    fs::{BoxError, ServeDir},
+    http,
+    middleware::HttpServiceExt as _,
+    router::{Router, get},
+};
 
 mod random;
 mod routes;
@@ -38,31 +43,35 @@ tokio::task_local! {
     static MINIJINJA_ENV: Arc<Environment<'static>>;
 }
 
-async fn async_main() -> Result<(), axum::BoxError> {
-    let mut minijinja_env = Environment::new();
+async fn async_main() -> Result<(), BoxError> {
+    let mut minijinja_env: Environment<'static> = Environment::new();
     minijinja_env.add_template("404", TPL_404)?;
     minijinja_env.add_template("about", TPL_ABOUT)?;
     minijinja_env.add_template("index", TPL_INDEX)?;
     minijinja_env.add_template("skel", TPL_SKEL)?;
     minijinja_env.add_template("turbofish", TPL_TURBOFISH)?;
 
-    let minijinja_env = Arc::new(minijinja_env);
-
-    let app = Router::new()
-        .route("/", get(routes::index))
-        .route("/about", get(routes::about))
-        .route("/random", get(routes::random))
-        .route("/random_reverse", get(routes::random_reverse))
-        .route("/{turbofish}", get(routes::turbofish))
-        .nest_service("/static", ServeDir::new("static"))
-        .fallback(routes::page_not_found)
-        .layer(axum::middleware::from_fn(move |req: Request, next: Next| {
-            MINIJINJA_ENV.scope(Arc::clone(&minijinja_env), next.run(req))
-        }));
+    let svc = Arc::new(
+        Router::new()
+            .route("/", get(routes::index))
+            .route("/about", get(routes::about))
+            .route("/random", get(routes::random))
+            .route("/random_reverse", get(routes::random_reverse))
+            .route("/{turbofish}", get(routes::turbofish))
+            .route(
+                "/static/{*rest}",
+                ServeDir::new("static")
+                    .nested(1)
+                    .fallback(routes::page_not_found.into_svc())
+                    .map_response(|res: http::Response<_>| async move { res.map(Body::new) }),
+            )
+            .fallback(routes::page_not_found)
+            .set_task_local(&MINIJINJA_ENV, Arc::new(minijinja_env)),
+    );
 
     println!("Starting server at http://localhost:8001/");
     let listener = TcpListener::bind((Ipv4Addr::LOCALHOST, 8001)).await?;
-    axum::serve(listener, app).await?;
+    zon::hyper::serve(listener, svc).await?;
 
     Ok(())
 }
