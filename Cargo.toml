@@ -9,10 +9,10 @@ edition = "2018"
 [dependencies]
 axum = { version = "0.7.1", default-features = false, features = ["http1", "http2", "tokio"] }
 futures-util = { version = "0.3.28", default-features = false }
-itertools = { version = "0.12.0", default-features = false }
-minijinja = "1.0.7"
+itertools = { version = "0.13.0", default-features = false }
+minijinja = "2.3.1"
 percent-encoding = "2.3.0"
 rand = { version = "0.8.5", default-features = false, features = ["getrandom", "small_rng"] }
 serde = "1.0.164"
 tokio = { version = "1.28.2", features = ["rt-multi-thread"] }
-tower-http = { version = "0.5.0", features = ["fs"] }
+tower-http = { version = "0.6.1", features = ["fs"] }
