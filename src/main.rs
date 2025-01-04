@@ -47,7 +47,7 @@ async fn async_main() -> Result<(), axum::BoxError> {
         .route("/about", get(routes::about))
         .route("/random", get(routes::random))
         .route("/random_reverse", get(routes::random_reverse))
-        .route("/:turbofish", get(routes::turbofish))
+        .route("/{turbofish}", get(routes::turbofish))
         .nest_service("/static", ServeDir::new("static"))
         .fallback(routes::page_not_found)
         .with_state(Arc::new(minijinja_env));
