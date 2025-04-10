@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use rand::{SeedableRng as _, rngs::SmallRng, seq::SliceRandom};
+use rand::{SeedableRng as _, rngs::SmallRng, seq::IndexedRandom as _};
 use std::{borrow::Cow, cell::RefCell};
 
 const RECURSION_LIMIT: u8 = 1;
@@ -34,7 +34,7 @@ const TYPES: &[&[&str]] = &[
 ];
 
 thread_local! {
-    static RNG: RefCell<SmallRng> = RefCell::new(SmallRng::from_entropy());
+    static RNG: RefCell<SmallRng> = RefCell::new(SmallRng::from_os_rng());
 }
 
 pub fn random_type() -> String {
