@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng as _};
+use rand::{SeedableRng as _, rngs::SmallRng, seq::SliceRandom};
 use std::{borrow::Cow, cell::RefCell};
 
 const RECURSION_LIMIT: u8 = 1;
@@ -44,11 +44,7 @@ pub fn random_type() -> String {
 fn random_type_depth(depth: u8, rng: &mut SmallRng) -> String {
     let &ty = TYPES.choose(rng).unwrap();
     Itertools::intersperse_with(ty.iter().map(|&x| Cow::Borrowed(x)), || {
-        if depth == RECURSION_LIMIT {
-            "_".into()
-        } else {
-            random_type_depth(depth + 1, rng).into()
-        }
+        if depth == RECURSION_LIMIT { "_".into() } else { random_type_depth(depth + 1, rng).into() }
     })
     .collect()
 }

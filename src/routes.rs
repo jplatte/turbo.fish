@@ -1,15 +1,15 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::{rejection::PathRejection, Path, State},
+    extract::{Path, State, rejection::PathRejection},
     http::StatusCode,
     response::{Html, IntoResponse, Redirect},
 };
-use minijinja::{context, Environment};
+use minijinja::{Environment, context};
 use percent_encoding::utf8_percent_encode;
 use serde::Serialize;
 
-use crate::{turbofish::TurboFish, FRAGMENT};
+use crate::{FRAGMENT, turbofish::TurboFish};
 
 pub async fn index(env: State<Arc<Environment<'static>>>) -> impl IntoResponse {
     render_html_template(&env, "index", ())
@@ -53,7 +53,7 @@ fn render_html_template<S>(
     env: &Environment<'_>,
     name: &str,
     ctx: S,
-) -> Result<Html<String>, impl IntoResponse>
+) -> Result<Html<String>, impl IntoResponse + use<S>>
 where
     S: Serialize,
 {

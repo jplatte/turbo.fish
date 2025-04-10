@@ -3,7 +3,7 @@ use std::fmt;
 use percent_encoding::utf8_percent_encode;
 use serde::de::{self, Deserialize, Deserializer};
 
-use crate::{random::random_type, FRAGMENT};
+use crate::{FRAGMENT, random::random_type};
 
 pub struct TurboFish {
     pub guts: String,

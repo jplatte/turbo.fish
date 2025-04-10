@@ -1,6 +1,6 @@
 use std::{net::Ipv4Addr, process::ExitCode, sync::Arc};
 
-use axum::{routing::get, Router};
+use axum::{Router, routing::get};
 use minijinja::Environment;
 use percent_encoding::{AsciiSet, CONTROLS};
 use tokio::net::TcpListener;

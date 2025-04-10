@@ -4,7 +4,7 @@ license = "AGPL-3.0+"
 name = "turbofish"
 repository = "https://github.com/jplatte/turbo.fish"
 version = "0.1.0"
-edition = "2018"
+edition = "2024"
 
 [dependencies]
 axum = { version = "0.8.1", default-features = false, features = ["http1", "http2", "tokio"] }
