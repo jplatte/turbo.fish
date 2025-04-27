@@ -1,6 +1,6 @@
 use std::{net::Ipv4Addr, process::ExitCode, sync::Arc};
 
-use axum::{Router, routing::get};
+use axum::{Router, extract::Request, middleware::Next, routing::get};
 use minijinja::Environment;
 use percent_encoding::{AsciiSet, CONTROLS};
 use tokio::net::TcpListener;
@@ -34,6 +34,10 @@ fn main() -> ExitCode {
     }
 }
 
+tokio::task_local! {
+    static MINIJINJA_ENV: Arc<Environment<'static>>;
+}
+
 async fn async_main() -> Result<(), axum::BoxError> {
     let mut minijinja_env = Environment::new();
     minijinja_env.add_template("404", TPL_404)?;
@@ -41,6 +45,8 @@ async fn async_main() -> Result<(), axum::BoxError> {
     minijinja_env.add_template("index", TPL_INDEX)?;
     minijinja_env.add_template("skel", TPL_SKEL)?;
     minijinja_env.add_template("turbofish", TPL_TURBOFISH)?;
+
+    let minijinja_env = Arc::new(minijinja_env);
 
     let app = Router::new()
         .route("/", get(routes::index))
@@ -50,7 +56,9 @@ async fn async_main() -> Result<(), axum::BoxError> {
         .route("/{turbofish}", get(routes::turbofish))
         .nest_service("/static", ServeDir::new("static"))
         .fallback(routes::page_not_found)
-        .with_state(Arc::new(minijinja_env));
+        .layer(axum::middleware::from_fn(move |req: Request, next: Next| {
+            MINIJINJA_ENV.scope(Arc::clone(&minijinja_env), next.run(req))
+        }));
 
     println!("Starting server at http://localhost:8001/");
     let listener = TcpListener::bind((Ipv4Addr::LOCALHOST, 8001)).await?;
