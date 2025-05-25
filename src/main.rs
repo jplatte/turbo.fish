@@ -1,4 +1,4 @@
-use std::{net::Ipv4Addr, process::ExitCode, sync::Arc};
+use std::{net::Ipv6Addr, process::ExitCode, sync::Arc};
 
 use axum::{Router, extract::Request, middleware::Next, routing::get};
 use minijinja::Environment;
@@ -61,7 +61,7 @@ async fn async_main() -> Result<(), axum::BoxError> {
         }));
 
     println!("Starting server at http://localhost:8001/");
-    let listener = TcpListener::bind((Ipv4Addr::LOCALHOST, 8001)).await?;
+    let listener = TcpListener::bind((Ipv6Addr::LOCALHOST, 8001)).await?;
     axum::serve(listener, app).await?;
 
     Ok(())
