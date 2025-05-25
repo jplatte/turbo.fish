@@ -1,11 +1,12 @@
-use axum::{
-    extract::{Path, rejection::PathRejection},
-    http::StatusCode,
-    response::{Html, IntoResponse, Redirect},
-};
 use minijinja::context;
 use percent_encoding::utf8_percent_encode;
 use serde::Serialize;
+use zon::{
+    IntoResponse,
+    http::StatusCode,
+    response::{Html, Redirect},
+    router::extract::{Path, PathRejection},
+};
 
 use crate::{FRAGMENT, MINIJINJA_ENV, turbofish::TurboFish};
 
