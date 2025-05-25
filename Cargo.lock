@@ -652,7 +652,6 @@ name = "turbofish"
 version = "0.1.0"
 dependencies = [
  "axum",
- "futures-util",
  "itertools",
  "minijinja",
  "percent-encoding",
