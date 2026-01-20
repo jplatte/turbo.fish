@@ -45,12 +45,12 @@ pub fn random_type() -> String {
 fn push_random_type_depth(output: &mut String, depth: u8, rng: &mut SmallRng) {
     let (first_part, rest) = TYPES.choose(rng).unwrap().split_first().unwrap();
     output.push_str(first_part);
-    for arg in rest {
+    for token in rest {
         if depth == RECURSION_LIMIT {
             output.push('_');
         } else {
             push_random_type_depth(output, depth + 1, rng);
         }
-        output.push_str(arg);
+        output.push_str(token);
     }
 }
