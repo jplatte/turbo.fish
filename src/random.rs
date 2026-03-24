@@ -1,4 +1,8 @@
-use rand::{SeedableRng as _, rngs::SmallRng, seq::IndexedRandom as _};
+use rand::{
+    SeedableRng as _,
+    rngs::{SmallRng, SysRng},
+    seq::IndexedRandom as _,
+};
 use std::cell::RefCell;
 
 const RECURSION_LIMIT: u8 = 1;
@@ -33,7 +37,7 @@ const TYPES: &[&[&str]] = &[
 ];
 
 thread_local! {
-    static RNG: RefCell<SmallRng> = RefCell::new(SmallRng::from_os_rng());
+    static RNG: RefCell<SmallRng> = RefCell::new(SmallRng::try_from_rng(&mut SysRng).unwrap());
 }
 
 pub fn random_type() -> String {
